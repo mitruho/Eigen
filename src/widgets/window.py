@@ -1,3 +1,4 @@
+import numpy as np
 from gi.repository import Gtk, Gdk, Adw, Gio
 from .matrix_view import MatrixView
 from .matrix_data import MatrixData
@@ -42,6 +43,7 @@ class EigenWindow(Adw.ApplicationWindow):
         self.cols_dropdown.connect('notify::selected', self.on_size_changed)
         self.matrix_cleanup_button.connect('clicked', self.on_matrix_cleanup_clicked)
         self.matrix_copy_button.connect('clicked', self.on_matrix_copy_clicked)
+        self.decompose_button.connect('clicked', self.on_decompose_clicked)
 
     def save_window_properties(self, *args):
         """
@@ -95,6 +97,11 @@ class EigenWindow(Adw.ApplicationWindow):
         clipboard = display.get_clipboard()
         content_provider = Gdk.ContentProvider.new_for_value(str(self.matrix_data.data))
         clipboard.set_content(content_provider)
+
+    def on_decompose_clicked(self, button):
+        w, v = np.linalg.eig(self.matrix_data.data)    # find eigenvalues and eigenvectors
+        print(f'eigenvalues = {w}')    # each entry is an eigenvalue
+        print(f'eigenvectors = \n{v}')    # each column is the corresponding eigenvector
 
     def on_matrix_cleanup_clicked(self, button):
         """
