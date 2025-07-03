@@ -1,7 +1,7 @@
 {
     "id" : "com.github.elahpeca.Eigen",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "46",
+    "runtime-version" : "48",
     "sdk" : "org.gnome.Sdk",
     "command" : "eigen",
     "finish-args" : [
@@ -23,6 +23,7 @@
         "*.a"
     ],
     "modules" : [
+    "python3-requirements.json",
         {
             "name" : "Eigen",
             "builddir" : true,

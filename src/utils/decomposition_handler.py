@@ -37,10 +37,10 @@ class DecompositionHandler:
             0,
             [
                 KeyValuePair(key=0, value="Eigen"),
-                KeyValuePair(key=1, value="SVD"),
-                KeyValuePair(key=2, value="LU"),
-                KeyValuePair(key=3, value="QR"),
-                KeyValuePair(key=4, value="Cholesky"),
+                #KeyValuePair(key=1, value="SVD"),
+                #KeyValuePair(key=2, value="LU"),
+                #KeyValuePair(key=3, value="QR"),
+                #KeyValuePair(key=4, value="Cholesky"),
             ],
         )
 
