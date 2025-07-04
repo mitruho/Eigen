@@ -16,12 +16,16 @@ class EigenWindow(Adw.ApplicationWindow):
 
     main_content = Gtk.Template.Child()
     decomposition_dropdown = Gtk.Template.Child()
+    matrix_control_box = Gtk.Template.Child()
+    matrix_control_box2   = Gtk.Template.Child()
     rows_dropdown = Gtk.Template.Child()
     cols_dropdown = Gtk.Template.Child()
+    rows_dropdown2 = Gtk.Template.Child()
+    cols_dropdown2 = Gtk.Template.Child()
     matrix_copy_button = Gtk.Template.Child()
     matrix_cleanup_button = Gtk.Template.Child()
+    additional_content = Gtk.Template.Child()
     decompose_button = Gtk.Template.Child()
-
     def __init__(self, **kwargs):
         """
         Initializes the EigenWindow.
@@ -35,15 +39,20 @@ class EigenWindow(Adw.ApplicationWindow):
 
         self.decomposition_handler = DecompositionHandler(self.decomposition_dropdown)
         self.size_handler = SizeHandler(self.rows_dropdown, self.cols_dropdown)
+        self.size_handler2 = SizeHandler(self.rows_dropdown2, self.cols_dropdown2)
 
         self.update_matrix_size()
         self.setup_matrix_view()
 
         self.rows_dropdown.connect('notify::selected', self.on_size_changed)
         self.cols_dropdown.connect('notify::selected', self.on_size_changed)
+        self.rows_dropdown2.connect('notify::selected', self.on_size_changed2)
+        self.cols_dropdown2.connect('notify::selected', self.on_size_changed2)
         self.matrix_cleanup_button.connect('clicked', self.on_matrix_cleanup_clicked)
         self.matrix_copy_button.connect('clicked', self.on_matrix_copy_clicked)
         self.decompose_button.connect('clicked', self.on_decompose_clicked)
+        self.decomposition_dropdown.connect("notify::selected", self.on_decomposition_changed)
+        self.on_decomposition_changed()
 
     def save_window_properties(self, *args):
         """
@@ -74,6 +83,9 @@ class EigenWindow(Adw.ApplicationWindow):
     def update_matrix_size(self):
         """Update internal row and column counts based on dropdown selection."""
         self.current_rows, self.current_cols = self.size_handler.get_selected_size()
+    def update_matrix2_size(self):
+        """Update internal row and column counts based on dropdown selection."""
+        self.current_rows2, self.current_cols2 = self.size_handler2.get_selected_size()
 
     def on_size_changed(self, *args):
         """
@@ -85,6 +97,17 @@ class EigenWindow(Adw.ApplicationWindow):
         self.update_matrix_size()
         self.matrix_data.resize(self.current_rows, self.current_cols)
         self.matrix_view.set_matrix(self.matrix_data)
+
+    def on_size_changed2(self, *args):
+        """
+        Handle changes in matrix size dropdowns.
+
+        Args:
+            *args: Positional arguments passed by the signal.
+        """
+        self.update_matrix2_size()
+        self.matrix_data2.resize(self.current_rows2, self.current_cols2)
+        self.matrix_view2.set_matrix(self.matrix_data2)
 
     def on_matrix_copy_clicked(self, button):
         """
@@ -111,3 +134,27 @@ class EigenWindow(Adw.ApplicationWindow):
             button: The button that triggered the event.
         """
         self.matrix_view.clear_matrix(self.current_rows, self.current_cols)
+    def on_decomposition_changed(self, *args):
+        choice = self.decomposition_handler.get_selected_key()   # 0 or 1 :contentReference[oaicite:1]{index=1}
+        self.matrix_control_box2.set_visible(choice == 0)
+
+    # ---------- create ----------
+        if choice == 0 and not hasattr(self, "matrix_view2"):
+            self.matrix_view2 = MatrixView()
+            self.matrix_view2.set_row_homogeneous(True)
+            self.matrix_view2.set_column_homogeneous(True)
+            self.matrix_view2.set_row_spacing(5)
+            self.matrix_view2.set_column_spacing(5)
+
+        # insert directly under the first matrix
+            self.additional_content.append(self.matrix_view2)
+
+            self.matrix_data2 = MatrixData(self.current_rows, self.current_cols)
+            self.matrix_view2.set_matrix(self.matrix_data2)
+
+    # ---------- remove ----------
+        elif choice != 0 and hasattr(self, "matrix_view2"):
+            self.matrix_view2.unparent()      # or self.main_content.remove(...)
+            del self.matrix_view2              # <— make the attribute disappear
+            del self.matrix_data2
+
