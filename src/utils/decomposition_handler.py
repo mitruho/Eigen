@@ -36,8 +36,8 @@ class DecompositionHandler:
             0,
             0,
             [
-                KeyValuePair(key=0, value="Eigen"),
-                #KeyValuePair(key=1, value="SVD"),
+                KeyValuePair(key=0, value="Calculator"),
+                KeyValuePair(key=1, value="Decomposer"),
                 #KeyValuePair(key=2, value="LU"),
                 #KeyValuePair(key=3, value="QR"),
                 #KeyValuePair(key=4, value="Cholesky"),
@@ -73,4 +73,5 @@ class DecompositionHandler:
         """
         selected_item = self.dropdown.get_selected_item()
         return selected_item.value if selected_item else None
+
 
