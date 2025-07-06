@@ -14,7 +14,7 @@ class EigenWindow(Adw.ApplicationWindow):
     """
     __gtype_name__ = 'EigenWindow'
 
-    main_content = Gtk.Template.Child()
+    matrix_one_menu = Gtk.Template.Child()
     decomposition_dropdown = Gtk.Template.Child()
     matrix_control_box = Gtk.Template.Child()
     matrix_control_box2   = Gtk.Template.Child()
@@ -75,7 +75,7 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_view.set_column_homogeneous(True)
         self.matrix_view.set_row_spacing(5)
         self.matrix_view.set_column_spacing(5)
-        self.main_content.insert_child_after(self.matrix_view, self.decomposition_dropdown)
+        self.matrix_one_menu.prepend(self.matrix_view)
 
         self.matrix_data = MatrixData(self.current_rows, self.current_cols)
         self.matrix_view.set_matrix(self.matrix_data)
@@ -147,7 +147,7 @@ class EigenWindow(Adw.ApplicationWindow):
             self.matrix_view2.set_column_spacing(5)
 
         # insert directly under the first matrix
-            self.additional_content.append(self.matrix_view2)
+            self.additional_content.prepend(self.matrix_view2)
 
             self.matrix_data2 = MatrixData(self.current_rows, self.current_cols)
             self.matrix_view2.set_matrix(self.matrix_data2)
