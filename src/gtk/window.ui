@@ -46,129 +46,129 @@
             </child>
 
             <!-- Container for matrix control elements -->
-	    <child>
-            <object class="GtkBox">
-	    <child>
-            <object class="GtkBox" id="matrix_one_menu">
-                <property name="orientation">1</property>
-                <property name="spacing">15</property>
             <child>
-              <object class="GtkBox" id="matrix_control_box">
-                <property name="orientation">0</property>
-                <property name="halign">3</property>
-                <property name="valign">1</property>
-                <property name="spacing">5</property>
-
-                <!-- Dropdowns for selecting the matrix size -->
+              <object class="GtkBox">
                 <child>
-                  <object class="GtkBox" id="size_selector">
-                    <style>
-                      <class name="linked"/>
-                    </style>
-                    <property name="orientation">0</property>
-                    <property name="halign">3</property>
-                    <property name="valign">1</property>
-
-                     <child>
-                       <object class="GtkDropDown" id="rows_dropdown">
-                         <property name="tooltip-text" translatable="yes">Number of Rows</property>
-                       </object>
-                     </child>
-                     <child>
-                       <object class="GtkDropDown" id="cols_dropdown">
-                         <property name="tooltip-text" translatable="yes">Number of Columns</property>
-                       </object>
-                    </child>
-                  </object>
-                 </child>
-
-                 <!-- Action panel with useful buttons -->
-                 <child>
-                   <object class="GtkBox" id="action_panel">
-                    <style>
-                       <class name="linked"/>
-                    </style>
-                    <property name="orientation">0</property>
-                    <property name="halign">3</property>
-                    <property name="valign">1</property>
+                  <object class="GtkBox" id="matrix_one_menu">
+                    <property name="orientation">1</property>
+                    <property name="spacing">15</property>
                     <child>
-                      <object class="GtkButton" id='matrix_copy_button'>
-                        <property name="icon-name">edit-copy-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Copy Matrix</property>
+                      <object class="GtkBox" id="matrix_control_box">
+                        <property name="orientation">0</property>
+                        <property name="halign">3</property>
+                        <property name="valign">1</property>
+                        <property name="spacing">5</property>
+
+                        <!-- Dropdowns for selecting the matrix size -->
+                        <child>
+                          <object class="GtkBox" id="size_selector">
+                            <style>
+                              <class name="linked"/>
+                            </style>
+                            <property name="orientation">0</property>
+                            <property name="halign">3</property>
+                            <property name="valign">1</property>
+
+                            <child>
+                              <object class="GtkDropDown" id="rows_dropdown">
+                                <property name="tooltip-text" translatable="yes">Number of Rows</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkDropDown" id="cols_dropdown">
+                                <property name="tooltip-text" translatable="yes">Number of Columns</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Action panel with useful buttons -->
+                        <child>
+                          <object class="GtkBox" id="action_panel">
+                            <style>
+                              <class name="linked"/>
+                            </style>
+                            <property name="orientation">0</property>
+                            <property name="halign">3</property>
+                            <property name="valign">1</property>
+                            <child>
+                              <object class="GtkButton" id='matrix_copy_button'>
+                                <property name="icon-name">edit-copy-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Copy Matrix</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id='matrix_cleanup_button'>
+                                <property name="icon-name">user-trash-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Clear Matrix</property>
+                              </object>
+                            </child>
+
+                          </object>
+                        </child>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkButton" id='matrix_cleanup_button'>
-                        <property name="icon-name">user-trash-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Clear Matrix</property>
-                      </object>
-                    </child>
-
                   </object>
                 </child>
-              </object>
-            </child>
-		     </object>
-                 </child>
-            <child>
-              <object class="GtkBox" id="additional_content">
-                <property name="orientation">1</property>
-                <property name="spacing">15</property>
-	    <child>
-              <object class="GtkBox" id="matrix_control_box2">
-                <property name="orientation">0</property>
-                <property name="halign">3</property>
-                <property name="valign">1</property>
-                <property name="spacing">5</property>
-
-                <!-- Dropdowns for selecting the matrix size -->
                 <child>
-                  <object class="GtkBox" id="size_selector2">
-                    <style>
-                      <class name="linked"/>
-                    </style>
-                    <property name="orientation">0</property>
-                    <property name="halign">3</property>
-                    <property name="valign">1</property>
-
-                     <child>
-                       <object class="GtkDropDown" id="rows_dropdown2">
-                         <property name="tooltip-text" translatable="yes">Number of Rows</property>
-                       </object>
-                     </child>
-                     <child>
-                       <object class="GtkDropDown" id="cols_dropdown2">
-                         <property name="tooltip-text" translatable="yes">Number of Columns</property>
-                       </object>
-                    </child>
-                  </object>
-                 </child>
-
-                 <!-- Action panel with useful buttons -->
-                 <child>
-                   <object class="GtkBox" id="action_panel2">
-                    <style>
-                       <class name="linked"/>
-                    </style>
-                    <property name="orientation">0</property>
-                    <property name="halign">3</property>
-                    <property name="valign">1</property>
+                  <object class="GtkBox" id="additional_content">
+                    <property name="orientation">1</property>
+                    <property name="spacing">15</property>
                     <child>
-                      <object class="GtkButton" id='matrix_copy_button2'>
-                        <property name="icon-name">edit-copy-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Copy Matrix</property>
+                      <object class="GtkBox" id="matrix_control_box2">
+                        <property name="orientation">0</property>
+                        <property name="halign">3</property>
+                        <property name="valign">1</property>
+                        <property name="spacing">5</property>
+
+                        <!-- Dropdowns for selecting the matrix size -->
+                        <child>
+                          <object class="GtkBox" id="size_selector2">
+                            <style>
+                              <class name="linked"/>
+                            </style>
+                            <property name="orientation">0</property>
+                            <property name="halign">3</property>
+                            <property name="valign">1</property>
+
+                            <child>
+                              <object class="GtkDropDown" id="rows_dropdown2">
+                                <property name="tooltip-text" translatable="yes">Number of Rows</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkDropDown" id="cols_dropdown2">
+                                <property name="tooltip-text" translatable="yes">Number of Columns</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Action panel with useful buttons -->
+                        <child>
+                          <object class="GtkBox" id="action_panel2">
+                            <style>
+                              <class name="linked"/>
+                            </style>
+                            <property name="orientation">0</property>
+                            <property name="halign">3</property>
+                            <property name="valign">1</property>
+                            <child>
+                              <object class="GtkButton" id='matrix_copy_button2'>
+                                <property name="icon-name">edit-copy-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Copy Matrix</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id='matrix_cleanup_button2'>
+                                <property name="icon-name">user-trash-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Clear Matrix</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkButton" id='matrix_cleanup_button2'>
-                        <property name="icon-name">user-trash-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Clear Matrix</property>
-                      </object>
-                    </child>
-	    </object>
-	    </child>
-		                   </object>
-	    </child>
                   </object>
                 </child>
               </object>
@@ -192,8 +192,8 @@
     </child>
   </template>
 
-    <!-- Application menu -->
-    <menu id="primary_menu">
+  <!-- Application menu -->
+  <menu id="primary_menu">
     <section>
       <!-- <item>
         <attribute name="label" translatable="yes">_Preferences</attribute>
