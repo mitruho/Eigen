@@ -124,7 +124,7 @@ class EigenWindow(Adw.ApplicationWindow):
 
     def on_decompose_clicked(self, button):
         self.eigenvalues, self.eigenvectors = np.linalg.eig(self.matrix_data.data)
-        ResultWindow(self, self.eigenvalues, self.eigenvectors).present()
+        ResultWindow(self.eigenvalues, self.eigenvectors).present(self)
 
     def on_matrix_cleanup_clicked(self, button):
         """

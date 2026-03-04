@@ -2,32 +2,32 @@ import numpy as np
 from gi.repository import Gtk, Adw, Gdk
 
 
-class ResultWindow(Adw.Window):
+class ResultWindow(Adw.Dialog):
     """
-    A window that displays eigenvalue decomposition results.
+    A dialog that displays eigenvalue decomposition results.
 
     Shows eigenvalues and their corresponding eigenvectors
     computed from the input matrix.
     """
 
-    def __init__(self, parent, eigenvalues, eigenvectors):
+    def __init__(self, eigenvalues, eigenvectors):
         """
         Initializes the ResultWindow.
 
         Args:
-            parent: The parent window (used for transient positioning).
             eigenvalues (np.ndarray): 1-D array of eigenvalues.
             eigenvectors (np.ndarray): 2-D array whose columns are eigenvectors.
         """
-        super().__init__(transient_for=parent, modal=False)
+        super().__init__()
         self.set_title("Decomposition Result")
-        self.set_default_size(420, 400)
+        self.set_content_width(420)
+        self.set_content_height(400)
 
         self.eigenvalues = eigenvalues
         self.eigenvectors = eigenvectors
 
         toolbar_view = Adw.ToolbarView()
-        self.set_content(toolbar_view)
+        self.set_child(toolbar_view)
 
         header = Adw.HeaderBar()
         toolbar_view.add_top_bar(header)
