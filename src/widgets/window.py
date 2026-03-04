@@ -16,6 +16,7 @@ class EigenWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'EigenWindow'
 
     matrix_one_menu = Gtk.Template.Child()
+    matrices_box = Gtk.Template.Child()
     decomposition_dropdown = Gtk.Template.Child()
     matrix_control_box = Gtk.Template.Child()
     matrix_control_box2   = Gtk.Template.Child()
@@ -123,6 +124,8 @@ class EigenWindow(Adw.ApplicationWindow):
         clipboard.set_content(content_provider)
 
     def on_decompose_clicked(self, button):
+        if self.decomposition_handler.get_selected_key() != 1:
+            return
         self.eigenvalues, self.eigenvectors = np.linalg.eig(self.matrix_data.data)
         ResultWindow(self.eigenvalues, self.eigenvectors).present(self)
 
@@ -134,9 +137,19 @@ class EigenWindow(Adw.ApplicationWindow):
             button: The button that triggered the event.
         """
         self.matrix_view.clear_matrix(self.current_rows, self.current_cols)
+    def _create_op_selector(self):
+        self.op_dropdown = Gtk.DropDown.new_from_strings(["+", "−", "×"])
+        self.op_dropdown.set_valign(Gtk.Align.CENTER)
+        self.op_dropdown.set_halign(Gtk.Align.CENTER)
+        return self.op_dropdown
+
+    def get_selected_op(self):
+        return ("+", "-", "*")[self.op_dropdown.get_selected()]
+
     def on_decomposition_changed(self, *args):
         choice = self.decomposition_handler.get_selected_key()   # 0 or 1 :contentReference[oaicite:1]{index=1}
         self.matrix_control_box2.set_visible(choice == 0)
+        self.decompose_button.set_label("Calculate" if choice == 0 else "Decompose")
 
     # ---------- create ----------
         if choice == 0 and not hasattr(self, "matrix_view2"):
@@ -152,9 +165,14 @@ class EigenWindow(Adw.ApplicationWindow):
             self.matrix_data2 = MatrixData(self.current_rows, self.current_cols)
             self.matrix_view2.set_matrix(self.matrix_data2)
 
+            self.op_selector = self._create_op_selector()
+            self.matrices_box.insert_child_after(self.op_selector, self.matrix_one_menu)
+
     # ---------- remove ----------
         elif choice != 0 and hasattr(self, "matrix_view2"):
-            self.matrix_view2.unparent()      # or self.main_content.remove(...)
-            del self.matrix_view2              # <— make the attribute disappear
+            self.matrix_view2.unparent()
+            del self.matrix_view2
             del self.matrix_data2
+            self.op_selector.unparent()
+            del self.op_selector
 
