@@ -132,6 +132,17 @@ class MatrixView(Gtk.Grid):
         """
         self.matrix_data.update_value(row, col, entry.get_text())
 
+    def load_matrix_values(self):
+        """Sets every entry's text from the current matrix data."""
+        for (row, col), revealer in self.entries.items():
+            entry = revealer.get_child()
+            val = self.matrix_data.data[row][col]
+            text = str(int(val)) if val == int(val) else str(val)
+            entry.handler_block_by_func(entry.filter_input)
+            entry.set_text(text)
+            entry.prev_input = text
+            entry.handler_unblock_by_func(entry.filter_input)
+
     def clear_matrix(self, rows, cols):
         """
         Clears all input widgets within the MatrixView.

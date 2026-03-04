@@ -24,8 +24,12 @@ class EigenWindow(Adw.ApplicationWindow):
     cols_dropdown = Gtk.Template.Child()
     rows_dropdown2 = Gtk.Template.Child()
     cols_dropdown2 = Gtk.Template.Child()
+    matrix_transpose_button = Gtk.Template.Child()
     matrix_copy_button = Gtk.Template.Child()
     matrix_cleanup_button = Gtk.Template.Child()
+    matrix_transpose_button2 = Gtk.Template.Child()
+    matrix_copy_button2 = Gtk.Template.Child()
+    matrix_cleanup_button2 = Gtk.Template.Child()
     additional_content = Gtk.Template.Child()
     decompose_button = Gtk.Template.Child()
     def __init__(self, **kwargs):
@@ -46,12 +50,16 @@ class EigenWindow(Adw.ApplicationWindow):
         self.update_matrix_size()
         self.setup_matrix_view()
 
-        self.rows_dropdown.connect('notify::selected', self.on_size_changed)
-        self.cols_dropdown.connect('notify::selected', self.on_size_changed)
-        self.rows_dropdown2.connect('notify::selected', self.on_size_changed2)
-        self.cols_dropdown2.connect('notify::selected', self.on_size_changed2)
+        self._rows_handler = self.rows_dropdown.connect('notify::selected', self.on_size_changed)
+        self._cols_handler = self.cols_dropdown.connect('notify::selected', self.on_size_changed)
+        self._rows2_handler = self.rows_dropdown2.connect('notify::selected', self.on_size_changed2)
+        self._cols2_handler = self.cols_dropdown2.connect('notify::selected', self.on_size_changed2)
         self.matrix_cleanup_button.connect('clicked', self.on_matrix_cleanup_clicked)
         self.matrix_copy_button.connect('clicked', self.on_matrix_copy_clicked)
+        self.matrix_transpose_button.connect('clicked', self.on_matrix_transpose_clicked)
+        self.matrix_cleanup_button2.connect('clicked', self.on_matrix_cleanup2_clicked)
+        self.matrix_copy_button2.connect('clicked', self.on_matrix_copy2_clicked)
+        self.matrix_transpose_button2.connect('clicked', self.on_matrix_transpose2_clicked)
         self.decompose_button.connect('clicked', self.on_decompose_clicked)
         self.decomposition_dropdown.connect("notify::selected", self.on_decomposition_changed)
         self.on_decomposition_changed()
@@ -156,6 +164,52 @@ class EigenWindow(Adw.ApplicationWindow):
             button: The button that triggered the event.
         """
         self.matrix_view.clear_matrix(self.current_rows, self.current_cols)
+
+    def on_matrix_copy2_clicked(self, button):
+        display = Gdk.Display.get_default()
+        clipboard = display.get_clipboard()
+        content_provider = Gdk.ContentProvider.new_for_value(str(self.matrix_data2.data))
+        clipboard.set_content(content_provider)
+
+    def on_matrix_cleanup2_clicked(self, button):
+        self.matrix_view2.clear_matrix(self.current_rows2, self.current_cols2)
+
+    def on_matrix_transpose2_clicked(self, button):
+        transposed = np.array(self.matrix_data2.data).T
+        new_rows, new_cols = transposed.shape
+
+        self.rows_dropdown2.handler_block(self._rows2_handler)
+        self.cols_dropdown2.handler_block(self._cols2_handler)
+        self.rows_dropdown2.set_selected(new_rows - 1)
+        self.cols_dropdown2.set_selected(new_cols - 1)
+        self.rows_dropdown2.handler_unblock(self._rows2_handler)
+        self.cols_dropdown2.handler_unblock(self._cols2_handler)
+
+        self.matrix_data2.rows = new_rows
+        self.matrix_data2.cols = new_cols
+        self.matrix_data2.data = transposed.tolist()
+        self.current_rows2, self.current_cols2 = new_rows, new_cols
+        self.matrix_view2.set_matrix(self.matrix_data2)
+        self.matrix_view2.load_matrix_values()
+
+    def on_matrix_transpose_clicked(self, button):
+        transposed = np.array(self.matrix_data.data).T
+        new_rows, new_cols = transposed.shape
+
+        self.rows_dropdown.handler_block(self._rows_handler)
+        self.cols_dropdown.handler_block(self._cols_handler)
+        self.rows_dropdown.set_selected(new_rows - 1)
+        self.cols_dropdown.set_selected(new_cols - 1)
+        self.rows_dropdown.handler_unblock(self._rows_handler)
+        self.cols_dropdown.handler_unblock(self._cols_handler)
+
+        self.matrix_data.rows = new_rows
+        self.matrix_data.cols = new_cols
+        self.matrix_data.data = transposed.tolist()
+        self.current_rows, self.current_cols = new_rows, new_cols
+        self.matrix_view.set_matrix(self.matrix_data)
+        self.matrix_view.load_matrix_values()
+
     def _create_op_selector(self):
         self.op_dropdown = Gtk.DropDown.new_from_strings(["+", "−", "×"])
         self.op_dropdown.set_valign(Gtk.Align.CENTER)
