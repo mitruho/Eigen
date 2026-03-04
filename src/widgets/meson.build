@@ -3,4 +3,5 @@ eigen_sources += files(
   'window.py',
   'matrix_view.py',
   'numeric_entry.py',
+  'result_window.py',
 )

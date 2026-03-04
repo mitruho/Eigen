@@ -4,6 +4,7 @@ from .matrix_view import MatrixView
 from .matrix_data import MatrixData
 from .decomposition_handler import DecompositionHandler
 from .size_handler import SizeHandler
+from .result_window import ResultWindow
 
 @Gtk.Template(resource_path='/com/github/elahpeca/Eigen/gtk/window.ui')
 class EigenWindow(Adw.ApplicationWindow):
@@ -122,9 +123,8 @@ class EigenWindow(Adw.ApplicationWindow):
         clipboard.set_content(content_provider)
 
     def on_decompose_clicked(self, button):
-        w, v = np.linalg.eig(self.matrix_data.data)    # find eigenvalues and eigenvectors
-        print(f'eigenvalues = {w}')    # each entry is an eigenvalue
-        print(f'eigenvectors = \n{v}')    # each column is the corresponding eigenvector
+        self.eigenvalues, self.eigenvectors = np.linalg.eig(self.matrix_data.data)
+        ResultWindow(self, self.eigenvalues, self.eigenvectors).present()
 
     def on_matrix_cleanup_clicked(self, button):
         """
