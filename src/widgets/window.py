@@ -4,7 +4,7 @@ from .matrix_view import MatrixView
 from .matrix_data import MatrixData
 from .decomposition_handler import DecompositionHandler
 from .size_handler import SizeHandler
-from .result_window import ResultWindow
+from .result_window import ResultWindow, CalcResultDialog
 
 @Gtk.Template(resource_path='/com/github/elahpeca/Eigen/gtk/window.ui')
 class EigenWindow(Adw.ApplicationWindow):
@@ -124,10 +124,29 @@ class EigenWindow(Adw.ApplicationWindow):
         clipboard.set_content(content_provider)
 
     def on_decompose_clicked(self, button):
-        if self.decomposition_handler.get_selected_key() != 1:
+        if self.decomposition_handler.get_selected_key() == 0:
+            self._run_calculator()
+        else:
+            self.eigenvalues, self.eigenvectors = np.linalg.eig(self.matrix_data.data)
+            ResultWindow(self.eigenvalues, self.eigenvectors).present(self)
+
+    def _run_calculator(self):
+        A = np.array(self.matrix_data.data)
+        B = np.array(self.matrix_data2.data)
+        op = self.get_selected_op()
+        try:
+            if op == "+":
+                result = A + B
+            elif op == "-":
+                result = A - B
+            else:
+                result = A @ B
+        except ValueError:
+            dialog = Adw.AlertDialog(heading="Error!", body="Operation not applicable.")
+            dialog.add_response("ok", "OK")
+            dialog.present(self)
             return
-        self.eigenvalues, self.eigenvectors = np.linalg.eig(self.matrix_data.data)
-        ResultWindow(self.eigenvalues, self.eigenvectors).present(self)
+        CalcResultDialog(result).present(self)
 
     def on_matrix_cleanup_clicked(self, button):
         """
