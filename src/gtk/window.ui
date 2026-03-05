@@ -98,6 +98,12 @@
                               </object>
                             </child>
                             <child>
+                              <object class="GtkButton" id='matrix_invert_button'>
+                                <property name="label">-1</property>
+                                <property name="tooltip-text" translatable="yes">Invert Matrix</property>
+                              </object>
+                            </child>
+                            <child>
                               <object class="GtkButton" id='matrix_copy_button'>
                                 <property name="icon-name">edit-copy-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Copy Matrix</property>
@@ -163,6 +169,12 @@
                               <object class="GtkButton" id='matrix_transpose_button2'>
                                 <property name="label">T</property>
                                 <property name="tooltip-text" translatable="yes">Transpose Matrix</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id='matrix_invert_button2'>
+                                <property name="label">-1</property>
+                                <property name="tooltip-text" translatable="yes">Invert Matrix</property>
                               </object>
                             </child>
                             <child>

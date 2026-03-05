@@ -25,9 +25,11 @@ class EigenWindow(Adw.ApplicationWindow):
     rows_dropdown2 = Gtk.Template.Child()
     cols_dropdown2 = Gtk.Template.Child()
     matrix_transpose_button = Gtk.Template.Child()
+    matrix_invert_button = Gtk.Template.Child()
     matrix_copy_button = Gtk.Template.Child()
     matrix_cleanup_button = Gtk.Template.Child()
     matrix_transpose_button2 = Gtk.Template.Child()
+    matrix_invert_button2 = Gtk.Template.Child()
     matrix_copy_button2 = Gtk.Template.Child()
     matrix_cleanup_button2 = Gtk.Template.Child()
     additional_content = Gtk.Template.Child()
@@ -57,9 +59,11 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_cleanup_button.connect('clicked', self.on_matrix_cleanup_clicked)
         self.matrix_copy_button.connect('clicked', self.on_matrix_copy_clicked)
         self.matrix_transpose_button.connect('clicked', self.on_matrix_transpose_clicked)
+        self.matrix_invert_button.connect('clicked', self.on_matrix_invert_clicked)
         self.matrix_cleanup_button2.connect('clicked', self.on_matrix_cleanup2_clicked)
         self.matrix_copy_button2.connect('clicked', self.on_matrix_copy2_clicked)
         self.matrix_transpose_button2.connect('clicked', self.on_matrix_transpose2_clicked)
+        self.matrix_invert_button2.connect('clicked', self.on_matrix_invert2_clicked)
         self.decompose_button.connect('clicked', self.on_decompose_clicked)
         self.decomposition_dropdown.connect("notify::selected", self.on_decomposition_changed)
         self.on_decomposition_changed()
@@ -214,6 +218,32 @@ class EigenWindow(Adw.ApplicationWindow):
         self.current_rows, self.current_cols = new_rows, new_cols
         self.matrix_view.set_matrix(self.matrix_data)
         self.matrix_view.load_matrix_values()
+
+    def on_matrix_invert_clicked(self, button):
+        M = np.array(self.matrix_data.data)
+        try:
+            inverted = np.linalg.inv(M)
+        except np.linalg.LinAlgError:
+            dialog = Adw.AlertDialog(heading="Error!", body="Matrix is singular and cannot be inverted.")
+            dialog.add_response("ok", "OK")
+            dialog.present(self)
+            return
+        self.matrix_data.data = inverted.tolist()
+        self.matrix_view.set_matrix(self.matrix_data)
+        self.matrix_view.load_matrix_values()
+
+    def on_matrix_invert2_clicked(self, button):
+        M = np.array(self.matrix_data2.data)
+        try:
+            inverted = np.linalg.inv(M)
+        except np.linalg.LinAlgError:
+            dialog = Adw.AlertDialog(heading="Error!", body="Matrix is singular and cannot be inverted.")
+            dialog.add_response("ok", "OK")
+            dialog.present(self)
+            return
+        self.matrix_data2.data = inverted.tolist()
+        self.matrix_view2.set_matrix(self.matrix_data2)
+        self.matrix_view2.load_matrix_values()
 
     def _create_op_selector(self):
         self.op_dropdown = Gtk.DropDown.new_from_strings(["+", "−", "·"])
