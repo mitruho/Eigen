@@ -1,3 +1,4 @@
+import ast
 import numpy as np
 from gi.repository import Gtk, Gdk, Adw, Gio
 from .matrix_view import MatrixView
@@ -27,10 +28,12 @@ class EigenWindow(Adw.ApplicationWindow):
     matrix_transpose_button = Gtk.Template.Child()
     matrix_invert_button = Gtk.Template.Child()
     matrix_copy_button = Gtk.Template.Child()
+    matrix_paste_button = Gtk.Template.Child()
     matrix_cleanup_button = Gtk.Template.Child()
     matrix_transpose_button2 = Gtk.Template.Child()
     matrix_invert_button2 = Gtk.Template.Child()
     matrix_copy_button2 = Gtk.Template.Child()
+    matrix_paste_button2 = Gtk.Template.Child()
     matrix_cleanup_button2 = Gtk.Template.Child()
     additional_content = Gtk.Template.Child()
     decompose_button = Gtk.Template.Child()
@@ -58,10 +61,12 @@ class EigenWindow(Adw.ApplicationWindow):
         self._cols2_handler = self.cols_dropdown2.connect('notify::selected', self.on_size_changed2)
         self.matrix_cleanup_button.connect('clicked', self.on_matrix_cleanup_clicked)
         self.matrix_copy_button.connect('clicked', self.on_matrix_copy_clicked)
+        self.matrix_paste_button.connect('clicked', self.on_matrix_paste_clicked)
         self.matrix_transpose_button.connect('clicked', self.on_matrix_transpose_clicked)
         self.matrix_invert_button.connect('clicked', self.on_matrix_invert_clicked)
         self.matrix_cleanup_button2.connect('clicked', self.on_matrix_cleanup2_clicked)
         self.matrix_copy_button2.connect('clicked', self.on_matrix_copy2_clicked)
+        self.matrix_paste_button2.connect('clicked', self.on_matrix_paste2_clicked)
         self.matrix_transpose_button2.connect('clicked', self.on_matrix_transpose2_clicked)
         self.matrix_invert_button2.connect('clicked', self.on_matrix_invert2_clicked)
         self.decompose_button.connect('clicked', self.on_decompose_clicked)
@@ -134,6 +139,74 @@ class EigenWindow(Adw.ApplicationWindow):
         clipboard = display.get_clipboard()
         content_provider = Gdk.ContentProvider.new_for_value(str(self.matrix_data.data))
         clipboard.set_content(content_provider)
+
+    def _parse_matrix_text(self, text):
+        """Parse clipboard text into a 2D list of floats, or return None on failure."""
+        if not text or not text.strip():
+            return None
+        # Try Python list format (our own copy format)
+        try:
+            data = ast.literal_eval(text.strip())
+            if (isinstance(data, list) and data and
+                    all(isinstance(row, list) and row for row in data) and
+                    all(isinstance(v, (int, float)) for row in data for v in row)):
+                row_len = len(data[0])
+                if all(len(row) == row_len for row in data):
+                    return [[float(v) for v in row] for row in data]
+        except (ValueError, SyntaxError):
+            pass
+
+    def on_matrix_paste_clicked(self, button):
+        clipboard = Gdk.Display.get_default().get_clipboard()
+        clipboard.read_text_async(None, self._on_paste_text_ready)
+
+    def _on_paste_text_ready(self, clipboard, result):
+        text = clipboard.read_text_finish(result)
+        data = self._parse_matrix_text(text)
+        if data is None:
+            return
+        new_rows, new_cols = len(data), len(data[0])
+        if new_rows > 7 or new_cols > 7:
+            return
+        self.rows_dropdown.handler_block(self._rows_handler)
+        self.cols_dropdown.handler_block(self._cols_handler)
+        self.rows_dropdown.set_selected(new_rows - 1)
+        self.cols_dropdown.set_selected(new_cols - 1)
+        self.rows_dropdown.handler_unblock(self._rows_handler)
+        self.cols_dropdown.handler_unblock(self._cols_handler)
+        self.matrix_data.rows = new_rows
+        self.matrix_data.cols = new_cols
+        self.matrix_data.data = data
+        self.current_rows, self.current_cols = new_rows, new_cols
+        self.matrix_view.set_matrix(self.matrix_data)
+        self.matrix_view.load_matrix_values()
+
+    def on_matrix_paste2_clicked(self, button):
+        clipboard = Gdk.Display.get_default().get_clipboard()
+        clipboard.read_text_async(None, self._on_paste2_text_ready)
+
+    def _on_paste2_text_ready(self, clipboard, result):
+        text = clipboard.read_text_finish(result)
+        data = self._parse_matrix_text(text)
+        if data is None:
+            return
+        new_rows, new_cols = len(data), len(data[0])
+        if new_rows > 7 or new_cols > 7:
+            return
+        self.rows_dropdown2.handler_block(self._rows2_handler)
+        self.cols_dropdown2.handler_block(self._cols2_handler)
+        self.rows_dropdown2.set_selected(new_rows - 1)
+        self.cols_dropdown2.set_selected(new_cols - 1)
+        self.rows_dropdown2.handler_unblock(self._rows2_handler)
+        self.cols_dropdown2.handler_unblock(self._cols2_handler)
+        self.matrix_data2.rows = new_rows
+        self.matrix_data2.cols = new_cols
+        self.matrix_data2.data = data
+        self.current_rows2, self.current_cols2 = new_rows, new_cols
+        self.matrix_view2.set_matrix(self.matrix_data2)
+        self.matrix_view2.load_matrix_values()
+
+
 
     def on_decompose_clicked(self, button):
         if self.decomposition_handler.get_selected_key() == 0:

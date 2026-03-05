@@ -110,6 +110,12 @@
                               </object>
                             </child>
                             <child>
+                              <object class="GtkButton" id='matrix_paste_button'>
+                                <property name="icon-name">edit-paste-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Paste Matrix</property>
+                              </object>
+                            </child>
+                            <child>
                               <object class="GtkButton" id='matrix_cleanup_button'>
                                 <property name="icon-name">user-trash-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Clear Matrix</property>
@@ -181,6 +187,12 @@
                               <object class="GtkButton" id='matrix_copy_button2'>
                                 <property name="icon-name">edit-copy-symbolic</property>
                                 <property name="tooltip-text" translatable="yes">Copy Matrix</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id='matrix_paste_button2'>
+                                <property name="icon-name">edit-paste-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Paste Matrix</property>
                               </object>
                             </child>
                             <child>
