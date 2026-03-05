@@ -214,7 +214,14 @@ class EigenWindow(Adw.ApplicationWindow):
         if self.decomposition_handler.get_selected_key() == 0:
             self._run_calculator()
         else:
-            self.eigenvalues, self.eigenvectors = np.linalg.eig(self.matrix_data.data)
+            try:
+                self.eigenvalues, self.eigenvectors = np.linalg.eig(self.matrix_data.data)
+            except ValueError:
+                dialog = Adw.AlertDialog(heading="Error!", body="Operation not applicable.")
+                dialog.add_response("ok", "OK")
+                dialog.present(self)
+                return
+
             ResultWindow(self.eigenvalues, self.eigenvectors).present(self)
 
     def _run_calculator(self):
@@ -332,6 +339,7 @@ class EigenWindow(Adw.ApplicationWindow):
     def on_decomposition_changed(self, *args):
         choice = self.decomposition_handler.get_selected_key()   # 0 or 1 :contentReference[oaicite:1]{index=1}
         self.matrix_control_box2.set_visible(choice == 0)
+        self.action_panel2.set_visible(choice == 0)
         self.decompose_button.set_label("Calculate" if choice == 0 else "Decompose")
 
     # ---------- create ----------
