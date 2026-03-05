@@ -148,7 +148,12 @@ class EigenWindow(Adw.ApplicationWindow):
             elif op == "-":
                 result = A - B
             else:
-                result = A @ B
+                if A.shape == (1, 1):
+                    result = A[0, 0] * B
+                elif B.shape == (1, 1):
+                    result = A * B[0, 0]
+                else:
+                    result = A @ B
         except ValueError:
             dialog = Adw.AlertDialog(heading="Error!", body="Operation not applicable.")
             dialog.add_response("ok", "OK")
@@ -211,13 +216,13 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_view.load_matrix_values()
 
     def _create_op_selector(self):
-        self.op_dropdown = Gtk.DropDown.new_from_strings(["+", "−", "×"])
+        self.op_dropdown = Gtk.DropDown.new_from_strings(["+", "−", "·"])
         self.op_dropdown.set_valign(Gtk.Align.CENTER)
         self.op_dropdown.set_halign(Gtk.Align.CENTER)
         return self.op_dropdown
 
     def get_selected_op(self):
-        return ("+", "-", "*")[self.op_dropdown.get_selected()]
+        return ("+", "-", "·")[self.op_dropdown.get_selected()]
 
     def on_decomposition_changed(self, *args):
         choice = self.decomposition_handler.get_selected_key()   # 0 or 1 :contentReference[oaicite:1]{index=1}
