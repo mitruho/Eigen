@@ -4,6 +4,7 @@ from .matrix_view import MatrixView
 from .matrix_data import MatrixData
 from .decomposition_handler import DecompositionHandler
 from .size_handler import SizeHandler
+from .result_window import ResultWindow, CalcResultDialog
 
 @Gtk.Template(resource_path='/com/github/elahpeca/Eigen/gtk/window.ui')
 class EigenWindow(Adw.ApplicationWindow):
@@ -15,6 +16,7 @@ class EigenWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'EigenWindow'
 
     matrix_one_menu = Gtk.Template.Child()
+    matrices_box = Gtk.Template.Child()
     decomposition_dropdown = Gtk.Template.Child()
     matrix_control_box = Gtk.Template.Child()
     matrix_control_box2   = Gtk.Template.Child()
@@ -22,8 +24,12 @@ class EigenWindow(Adw.ApplicationWindow):
     cols_dropdown = Gtk.Template.Child()
     rows_dropdown2 = Gtk.Template.Child()
     cols_dropdown2 = Gtk.Template.Child()
+    matrix_transpose_button = Gtk.Template.Child()
     matrix_copy_button = Gtk.Template.Child()
     matrix_cleanup_button = Gtk.Template.Child()
+    matrix_transpose_button2 = Gtk.Template.Child()
+    matrix_copy_button2 = Gtk.Template.Child()
+    matrix_cleanup_button2 = Gtk.Template.Child()
     additional_content = Gtk.Template.Child()
     decompose_button = Gtk.Template.Child()
     def __init__(self, **kwargs):
@@ -44,12 +50,16 @@ class EigenWindow(Adw.ApplicationWindow):
         self.update_matrix_size()
         self.setup_matrix_view()
 
-        self.rows_dropdown.connect('notify::selected', self.on_size_changed)
-        self.cols_dropdown.connect('notify::selected', self.on_size_changed)
-        self.rows_dropdown2.connect('notify::selected', self.on_size_changed2)
-        self.cols_dropdown2.connect('notify::selected', self.on_size_changed2)
+        self._rows_handler = self.rows_dropdown.connect('notify::selected', self.on_size_changed)
+        self._cols_handler = self.cols_dropdown.connect('notify::selected', self.on_size_changed)
+        self._rows2_handler = self.rows_dropdown2.connect('notify::selected', self.on_size_changed2)
+        self._cols2_handler = self.cols_dropdown2.connect('notify::selected', self.on_size_changed2)
         self.matrix_cleanup_button.connect('clicked', self.on_matrix_cleanup_clicked)
         self.matrix_copy_button.connect('clicked', self.on_matrix_copy_clicked)
+        self.matrix_transpose_button.connect('clicked', self.on_matrix_transpose_clicked)
+        self.matrix_cleanup_button2.connect('clicked', self.on_matrix_cleanup2_clicked)
+        self.matrix_copy_button2.connect('clicked', self.on_matrix_copy2_clicked)
+        self.matrix_transpose_button2.connect('clicked', self.on_matrix_transpose2_clicked)
         self.decompose_button.connect('clicked', self.on_decompose_clicked)
         self.decomposition_dropdown.connect("notify::selected", self.on_decomposition_changed)
         self.on_decomposition_changed()
@@ -122,9 +132,29 @@ class EigenWindow(Adw.ApplicationWindow):
         clipboard.set_content(content_provider)
 
     def on_decompose_clicked(self, button):
-        w, v = np.linalg.eig(self.matrix_data.data)    # find eigenvalues and eigenvectors
-        print(f'eigenvalues = {w}')    # each entry is an eigenvalue
-        print(f'eigenvectors = \n{v}')    # each column is the corresponding eigenvector
+        if self.decomposition_handler.get_selected_key() == 0:
+            self._run_calculator()
+        else:
+            self.eigenvalues, self.eigenvectors = np.linalg.eig(self.matrix_data.data)
+            ResultWindow(self.eigenvalues, self.eigenvectors).present(self)
+
+    def _run_calculator(self):
+        A = np.array(self.matrix_data.data)
+        B = np.array(self.matrix_data2.data)
+        op = self.get_selected_op()
+        try:
+            if op == "+":
+                result = A + B
+            elif op == "-":
+                result = A - B
+            else:
+                result = A @ B
+        except ValueError:
+            dialog = Adw.AlertDialog(heading="Error!", body="Operation not applicable.")
+            dialog.add_response("ok", "OK")
+            dialog.present(self)
+            return
+        CalcResultDialog(result).present(self)
 
     def on_matrix_cleanup_clicked(self, button):
         """
@@ -134,9 +164,65 @@ class EigenWindow(Adw.ApplicationWindow):
             button: The button that triggered the event.
         """
         self.matrix_view.clear_matrix(self.current_rows, self.current_cols)
+
+    def on_matrix_copy2_clicked(self, button):
+        display = Gdk.Display.get_default()
+        clipboard = display.get_clipboard()
+        content_provider = Gdk.ContentProvider.new_for_value(str(self.matrix_data2.data))
+        clipboard.set_content(content_provider)
+
+    def on_matrix_cleanup2_clicked(self, button):
+        self.matrix_view2.clear_matrix(self.current_rows2, self.current_cols2)
+
+    def on_matrix_transpose2_clicked(self, button):
+        transposed = np.array(self.matrix_data2.data).T
+        new_rows, new_cols = transposed.shape
+
+        self.rows_dropdown2.handler_block(self._rows2_handler)
+        self.cols_dropdown2.handler_block(self._cols2_handler)
+        self.rows_dropdown2.set_selected(new_rows - 1)
+        self.cols_dropdown2.set_selected(new_cols - 1)
+        self.rows_dropdown2.handler_unblock(self._rows2_handler)
+        self.cols_dropdown2.handler_unblock(self._cols2_handler)
+
+        self.matrix_data2.rows = new_rows
+        self.matrix_data2.cols = new_cols
+        self.matrix_data2.data = transposed.tolist()
+        self.current_rows2, self.current_cols2 = new_rows, new_cols
+        self.matrix_view2.set_matrix(self.matrix_data2)
+        self.matrix_view2.load_matrix_values()
+
+    def on_matrix_transpose_clicked(self, button):
+        transposed = np.array(self.matrix_data.data).T
+        new_rows, new_cols = transposed.shape
+
+        self.rows_dropdown.handler_block(self._rows_handler)
+        self.cols_dropdown.handler_block(self._cols_handler)
+        self.rows_dropdown.set_selected(new_rows - 1)
+        self.cols_dropdown.set_selected(new_cols - 1)
+        self.rows_dropdown.handler_unblock(self._rows_handler)
+        self.cols_dropdown.handler_unblock(self._cols_handler)
+
+        self.matrix_data.rows = new_rows
+        self.matrix_data.cols = new_cols
+        self.matrix_data.data = transposed.tolist()
+        self.current_rows, self.current_cols = new_rows, new_cols
+        self.matrix_view.set_matrix(self.matrix_data)
+        self.matrix_view.load_matrix_values()
+
+    def _create_op_selector(self):
+        self.op_dropdown = Gtk.DropDown.new_from_strings(["+", "−", "×"])
+        self.op_dropdown.set_valign(Gtk.Align.CENTER)
+        self.op_dropdown.set_halign(Gtk.Align.CENTER)
+        return self.op_dropdown
+
+    def get_selected_op(self):
+        return ("+", "-", "*")[self.op_dropdown.get_selected()]
+
     def on_decomposition_changed(self, *args):
         choice = self.decomposition_handler.get_selected_key()   # 0 or 1 :contentReference[oaicite:1]{index=1}
         self.matrix_control_box2.set_visible(choice == 0)
+        self.decompose_button.set_label("Calculate" if choice == 0 else "Decompose")
 
     # ---------- create ----------
         if choice == 0 and not hasattr(self, "matrix_view2"):
@@ -152,9 +238,14 @@ class EigenWindow(Adw.ApplicationWindow):
             self.matrix_data2 = MatrixData(self.current_rows, self.current_cols)
             self.matrix_view2.set_matrix(self.matrix_data2)
 
+            self.op_selector = self._create_op_selector()
+            self.matrices_box.insert_child_after(self.op_selector, self.matrix_one_menu)
+
     # ---------- remove ----------
         elif choice != 0 and hasattr(self, "matrix_view2"):
-            self.matrix_view2.unparent()      # or self.main_content.remove(...)
-            del self.matrix_view2              # <— make the attribute disappear
+            self.matrix_view2.unparent()
+            del self.matrix_view2
             del self.matrix_data2
+            self.op_selector.unparent()
+            del self.op_selector
 

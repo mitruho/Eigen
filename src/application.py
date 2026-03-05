@@ -56,9 +56,9 @@ class EigenApplication(Adw.Application):
             issue_url = 'https://github.com/elahpeca/Eigen/issues',
             developers=[
                 'elahpeca <acephaleee@gmail.com>',
-                'k0nvulsi0n <charonpersonal@proton.me>',
+                'mitruho <charonpersonal@proton.me>',
                 ],
-            artists=['k0nvulsi0n <charonpersonal@proton.me>'],
+            artists=['mitruho <charonpersonal@proton.me>'],
             translator_credits=("Your Name <Your Email>"),
             copyright='© 2024 elahpeca',
             license_type = Gtk.License.GPL_3_0,
