@@ -99,6 +99,69 @@ class ResultWindow(Adw.Dialog):
         box.append(copy_evec_btn)
 
 
+class QRResultWindow(Adw.Dialog):
+    """Dialog that displays QR decomposition results."""
+
+    def __init__(self, Q, R):
+        super().__init__()
+        self.set_title("QR Decomposition Result")
+        self.set_content_width(420)
+        self.set_content_height(400)
+
+        toolbar_view = Adw.ToolbarView()
+        self.set_child(toolbar_view)
+        toolbar_view.add_top_bar(Adw.HeaderBar())
+
+        scroll = Gtk.ScrolledWindow()
+        scroll.set_propagate_natural_height(True)
+        toolbar_view.set_content(scroll)
+
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        box.set_margin_top(18)
+        box.set_margin_bottom(18)
+        box.set_margin_start(18)
+        box.set_margin_end(18)
+        scroll.set_child(box)
+
+        # Q matrix section
+        q_group = Adw.PreferencesGroup()
+        q_group.set_title("Q (Orthonormal)")
+        box.append(q_group)
+
+        for r in range(Q.shape[0]):
+            text = _format_vector(Q[r])
+            row = Adw.ActionRow()
+            row.set_title(f"Row {r + 1}")
+            row.set_subtitle(text)
+            row.add_suffix(_make_copy_button(text))
+            q_group.add(row)
+
+        copy_q_btn = Gtk.Button(label="Copy as matrix")
+        copy_q_btn.add_css_class("pill")
+        copy_q_btn.set_halign(Gtk.Align.END)
+        copy_q_btn.connect("clicked", lambda _: _copy_to_clipboard(_format_matrix(Q)))
+        box.append(copy_q_btn)
+
+        # R matrix section
+        r_group = Adw.PreferencesGroup()
+        r_group.set_title("R (Upper Triangular)")
+        box.append(r_group)
+
+        for i in range(R.shape[0]):
+            text = _format_vector(R[i])
+            row = Adw.ActionRow()
+            row.set_title(f"Row {i + 1}")
+            row.set_subtitle(text)
+            row.add_suffix(_make_copy_button(text))
+            r_group.add(row)
+
+        copy_r_btn = Gtk.Button(label="Copy as matrix")
+        copy_r_btn.add_css_class("pill")
+        copy_r_btn.set_halign(Gtk.Align.END)
+        copy_r_btn.connect("clicked", lambda _: _copy_to_clipboard(_format_matrix(R)))
+        box.append(copy_r_btn)
+
+
 class CalcResultDialog(Adw.Dialog):
     """Dialog that displays the result of a matrix arithmetic operation."""
 

@@ -6,7 +6,7 @@ from .matrix_data import MatrixData
 from .mode_handler import ModeHandler
 from .size_handler import SizeHandler
 from .op_handler import OpHandler
-from .result_window import ResultWindow, CalcResultDialog
+from .result_window import ResultWindow, CalcResultDialog, QRResultWindow
 
 @Gtk.Template(resource_path='/com/github/elahpeca/Eigen/gtk/window.ui')
 class EigenWindow(Adw.ApplicationWindow):
@@ -226,8 +226,17 @@ class EigenWindow(Adw.ApplicationWindow):
                 dialog.add_response("ok", "OK")
                 dialog.present(self)
                 return
-
             ResultWindow(self.eigenvalues, self.eigenvectors).present(self)
+        elif self.mode_handler.get_selected_key() == 2:
+            try:
+                self.orthonormal, self.upper_trian = np.linalg.qr(self.matrix_data.data)
+            except ValueError:
+                dialog = Adw.AlertDialog(heading="Error!", body="Operation not applicable.")
+                dialog.add_response("ok", "OK")
+                dialog.present(self)
+                return
+
+            QRResultWindow(self.orthonormal, self.upper_trian).present(self)
 
     def _run_calculator(self):
         A = np.array(self.matrix_data.data)
