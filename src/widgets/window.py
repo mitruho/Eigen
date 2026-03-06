@@ -1,12 +1,13 @@
 import ast
 import numpy as np
 from gi.repository import Gtk, Gdk, Adw, Gio
+from .lu import lu
 from .matrix_view import MatrixView
 from .matrix_data import MatrixData
 from .mode_handler import ModeHandler
 from .size_handler import SizeHandler
 from .op_handler import OpHandler
-from .result_window import ResultWindow, CalcResultDialog, QRResultWindow
+from .result_window import ResultWindow, CalcResultDialog, QRResultWindow, LUResultWindow
 
 @Gtk.Template(resource_path='/com/github/elahpeca/Eigen/gtk/window.ui')
 class EigenWindow(Adw.ApplicationWindow):
@@ -216,6 +217,12 @@ class EigenWindow(Adw.ApplicationWindow):
 
 
     def on_execute_clicked(self, button):
+        """
+        Actions on execute button pressed: calculator, eigendecomposition, QR-decomposition, LU-decomposition
+
+        Args:
+            button: The button that triggered the event.
+        """
         if self.mode_handler.get_selected_key() == 0:
             self._run_calculator()
         elif self.mode_handler.get_selected_key() == 1:
@@ -237,6 +244,15 @@ class EigenWindow(Adw.ApplicationWindow):
                 return
 
             QRResultWindow(self.orthonormal, self.upper_trian).present(self)
+        elif self.mode_handler.get_selected_key() == 3:
+            try:
+                self.L, self.U = lu(self.matrix_data.data)
+            except ValueError:
+                dialog = Adw.AlertDialog(heading="Error!", body="Operation not applicable.")
+                dialog.add_response("ok", "OK")
+                dialog.present(self)
+                return
+            LUResultWindow(self.L, self.U).present(self)
 
     def _run_calculator(self):
         A = np.array(self.matrix_data.data)

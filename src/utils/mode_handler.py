@@ -39,7 +39,7 @@ class ModeHandler:
                 KeyValuePair(key=0, value="Calculator"),
                 KeyValuePair(key=1, value="Eigen"),
                 KeyValuePair(key=2, value="QR"),
-                #KeyValuePair(key=3, value="LU"),
+                KeyValuePair(key=3, value="LU"),
                 #KeyValuePair(key=4, value="Cholesky"),
             ],
         )
