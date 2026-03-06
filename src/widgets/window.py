@@ -57,6 +57,7 @@ class EigenWindow(Adw.ApplicationWindow):
         self.size_handler2 = SizeHandler(self.rows_dropdown2, self.cols_dropdown2)
         self.op_handler = OpHandler(self.op_dropdown)
         self.update_matrix_size()
+        self.update_matrix2_size()
         self.setup_matrix_view()
 
         self._rows_handler = self.rows_dropdown.connect('notify::selected', self.on_size_changed)
@@ -335,6 +336,7 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_control_box2.set_visible(choice == 0)
         self.action_panel2.set_visible(choice == 0)
         self.op_dropdown.set_visible(choice == 0)
+        self.additional_content.set_visible(choice == 0)
         self.decompose_button.set_label("Calculate" if choice == 0 else "Decompose")
 
     # ---------- create ----------

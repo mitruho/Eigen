@@ -32,6 +32,5 @@ class SizeHandler:
             tuple of int: The selected values of each dropdown, if any, otherwise None.
         """
         selected_size = tuple(dropdown.get_selected() + 1 for dropdown in self.dropdowns)
-        print(tuple(item if item else None for item in selected_size))
         return tuple(item if item else None for item in selected_size)
 
