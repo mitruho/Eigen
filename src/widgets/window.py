@@ -3,7 +3,7 @@ import numpy as np
 from gi.repository import Gtk, Gdk, Adw, Gio
 from .matrix_view import MatrixView
 from .matrix_data import MatrixData
-from .decomposition_handler import DecompositionHandler
+from .mode_handler import ModeHandler
 from .size_handler import SizeHandler
 from .op_handler import OpHandler
 from .result_window import ResultWindow, CalcResultDialog
@@ -19,7 +19,7 @@ class EigenWindow(Adw.ApplicationWindow):
 
     matrix_menu_main = Gtk.Template.Child()
     matrices_box = Gtk.Template.Child()
-    decomposition_dropdown = Gtk.Template.Child()
+    mode_dropdown = Gtk.Template.Child()
     op_dropdown = Gtk.Template.Child()
     op_dropdown_box = Gtk.Template.Child()
     matrix_control_box_main = Gtk.Template.Child()
@@ -41,7 +41,7 @@ class EigenWindow(Adw.ApplicationWindow):
     matrix_paste_button_2 = Gtk.Template.Child()
     matrix_cleanup_button_2 = Gtk.Template.Child()
     matrix_menu_2 = Gtk.Template.Child()
-    decompose_button = Gtk.Template.Child()
+    execute_button = Gtk.Template.Child()
     def __init__(self, **kwargs):
         """
         Initializes the EigenWindow.
@@ -53,7 +53,7 @@ class EigenWindow(Adw.ApplicationWindow):
         self.settings = Gio.Settings.new('com.github.elahpeca.Eigen')
         self.connect('unrealize', self.save_window_properties)
 
-        self.decomposition_handler = DecompositionHandler(self.decomposition_dropdown)
+        self.mode_handler = ModeHandler(self.mode_dropdown)
         self.size_handler = SizeHandler(self.rows_dropdown_main, self.cols_dropdown_main)
         self.size_handler2 = SizeHandler(self.rows_dropdown_2, self.cols_dropdown_2)
         self.op_handler = OpHandler(self.op_dropdown)
@@ -75,8 +75,8 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_paste_button_2.connect('clicked', self.on_matrix_paste2_clicked)
         self.matrix_transpose_button_2.connect('clicked', self.on_matrix_transpose2_clicked)
         self.matrix_invert_button_2.connect('clicked', self.on_matrix_invert2_clicked)
-        self.decompose_button.connect('clicked', self.on_decompose_clicked)
-        self.decomposition_dropdown.connect("notify::selected", self.on_decomposition_changed)
+        self.execute_button.connect('clicked', self.on_execute_clicked)
+        self.mode_dropdown.connect("notify::selected", self.on_decomposition_changed)
         self.on_decomposition_changed()
 
     def save_window_properties(self, *args):
@@ -215,10 +215,10 @@ class EigenWindow(Adw.ApplicationWindow):
 
 
 
-    def on_decompose_clicked(self, button):
-        if self.decomposition_handler.get_selected_key() == 0:
+    def on_execute_clicked(self, button):
+        if self.mode_handler.get_selected_key() == 0:
             self._run_calculator()
-        else:
+        elif self.mode_handler.get_selected_key() == 1:
             try:
                 self.eigenvalues, self.eigenvectors = np.linalg.eig(self.matrix_data.data)
             except ValueError:
@@ -233,7 +233,6 @@ class EigenWindow(Adw.ApplicationWindow):
         A = np.array(self.matrix_data.data)
         B = np.array(self.matrix_data2.data)
         op = self.op_handler.get_selected_op()
-        print(op)
         try:
             if op == 0:
                 result = A + B
@@ -334,12 +333,12 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_view2.load_matrix_values()
 
     def on_decomposition_changed(self, *args):
-        choice = self.decomposition_handler.get_selected_key()   # 0 or 1 :contentReference[oaicite:1]{index=1}
+        choice = self.mode_handler.get_selected_key()   # 0 or 1 :contentReference[oaicite:1]{index=1}
         self.matrix_control_box_2.set_visible(choice == 0)
         self.action_panel_2.set_visible(choice == 0)
         self.op_dropdown_box.set_visible(choice == 0)
         self.matrix_menu_2.set_visible(choice == 0)
-        self.decompose_button.set_label("Calculate" if choice == 0 else "Decompose")
+        self.execute_button.set_label("Calculate" if choice == 0 else "Decompose")
 
     # ---------- create ----------
         if choice == 0 and not hasattr(self, "matrix_view2"):

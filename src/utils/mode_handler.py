@@ -14,10 +14,10 @@ class KeyValuePair(GObject.Object):
         default="",
     )
 
-class DecompositionHandler:
+class ModeHandler:
     def __init__(self, dropdown, selected=0):
         """
-        Initializes the Dropdown for matrix decomposition selection.
+        Initializes the Dropdown for mode selection.
 
         Args:
             dropdown (Gtk.DropDown): The dropdown widget.
