@@ -106,7 +106,7 @@ class CalcResultDialog(Adw.Dialog):
         super().__init__()
         self.set_title("Result")
         self.set_content_width(420)
-        self.set_content_height(320)
+        self.set_content_height(350)
 
         self._result = result
 

@@ -5,6 +5,7 @@ from .matrix_view import MatrixView
 from .matrix_data import MatrixData
 from .decomposition_handler import DecompositionHandler
 from .size_handler import SizeHandler
+from .op_handler import OpHandler
 from .result_window import ResultWindow, CalcResultDialog
 
 @Gtk.Template(resource_path='/com/github/elahpeca/Eigen/gtk/window.ui')
@@ -19,6 +20,7 @@ class EigenWindow(Adw.ApplicationWindow):
     matrix_one_menu = Gtk.Template.Child()
     matrices_box = Gtk.Template.Child()
     decomposition_dropdown = Gtk.Template.Child()
+    op_dropdown = Gtk.Template.Child()
     matrix_control_box = Gtk.Template.Child()
     matrix_control_box2   = Gtk.Template.Child()
     rows_dropdown = Gtk.Template.Child()
@@ -53,7 +55,7 @@ class EigenWindow(Adw.ApplicationWindow):
         self.decomposition_handler = DecompositionHandler(self.decomposition_dropdown)
         self.size_handler = SizeHandler(self.rows_dropdown, self.cols_dropdown)
         self.size_handler2 = SizeHandler(self.rows_dropdown2, self.cols_dropdown2)
-
+        self.op_handler = OpHandler(self.op_dropdown)
         self.update_matrix_size()
         self.setup_matrix_view()
 
@@ -96,6 +98,7 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_view.set_column_homogeneous(True)
         self.matrix_view.set_row_spacing(5)
         self.matrix_view.set_column_spacing(5)
+        self.matrix_view.set_halign(Gtk.Align.CENTER)
         self.matrix_one_menu.insert_child_after(self.matrix_view, self.matrix_control_box)
 
         self.matrix_data = MatrixData(self.current_rows, self.current_cols)
@@ -327,12 +330,6 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_view2.set_matrix(self.matrix_data2)
         self.matrix_view2.load_matrix_values()
 
-    def _create_op_selector(self):
-        self.op_dropdown = Gtk.DropDown.new_from_strings(["+", "−", "·"])
-        self.op_dropdown.set_valign(Gtk.Align.CENTER)
-        self.op_dropdown.set_halign(Gtk.Align.CENTER)
-        return self.op_dropdown
-
     def get_selected_op(self):
         return ("+", "-", "·")[self.op_dropdown.get_selected()]
 
@@ -340,6 +337,7 @@ class EigenWindow(Adw.ApplicationWindow):
         choice = self.decomposition_handler.get_selected_key()   # 0 or 1 :contentReference[oaicite:1]{index=1}
         self.matrix_control_box2.set_visible(choice == 0)
         self.action_panel2.set_visible(choice == 0)
+        self.op_dropdown.set_visible(choice == 0)
         self.decompose_button.set_label("Calculate" if choice == 0 else "Decompose")
 
     # ---------- create ----------
@@ -349,21 +347,16 @@ class EigenWindow(Adw.ApplicationWindow):
             self.matrix_view2.set_column_homogeneous(True)
             self.matrix_view2.set_row_spacing(5)
             self.matrix_view2.set_column_spacing(5)
+            self.matrix_view2.set_halign(Gtk.Align.CENTER)
 
-        # insert directly under the first matrix
             self.additional_content.insert_child_after(self.matrix_view2, self.matrix_control_box2)
 
             self.matrix_data2 = MatrixData(self.current_rows, self.current_cols)
             self.matrix_view2.set_matrix(self.matrix_data2)
-
-            self.op_selector = self._create_op_selector()
-            self.matrices_box.insert_child_after(self.op_selector, self.matrix_one_menu)
 
     # ---------- remove ----------
         elif choice != 0 and hasattr(self, "matrix_view2"):
             self.matrix_view2.unparent()
             del self.matrix_view2
             del self.matrix_data2
-            self.op_selector.unparent()
-            del self.op_selector
 
