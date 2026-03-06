@@ -56,15 +56,15 @@
             <!-- Container for matrix control elements -->
             <child>
               <object class="GtkBox" id="matrices_box">
-                <property name="spacing">25</property>
-                                <property name="margin-start">35</property>
+                <property name="spacing">75</property>
+                <property name="margin-start">35</property>
                 <property name="margin-end">35</property>
 
                 <child>
                   <object class="GtkBox" id="matrix_one_menu">
                     <property name="orientation">1</property>
                     <property name="spacing">15</property>
-                    <property name="hexpand">false</property>
+                    <property name="valign">3</property>
 
                     <!-- Dropdowns for selecting the matrix size -->
                     <child>
@@ -165,7 +165,7 @@
                 </child>
                 
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="op_dropdown_box">
                       <style>
                         <class name="linked"/>
                       </style>
@@ -183,6 +183,7 @@
                     <property name="hexpand">false</property>
                     <property name="orientation">1</property>
                     <property name="spacing">15</property>
+                    <property name="valign">3</property>
 
                     <!-- Dropdowns for selecting the matrix size -->
                     <child>

@@ -21,6 +21,7 @@ class EigenWindow(Adw.ApplicationWindow):
     matrices_box = Gtk.Template.Child()
     decomposition_dropdown = Gtk.Template.Child()
     op_dropdown = Gtk.Template.Child()
+    op_dropdown_box = Gtk.Template.Child()
     matrix_control_box = Gtk.Template.Child()
     matrix_control_box2   = Gtk.Template.Child()
     rows_dropdown = Gtk.Template.Child()
@@ -233,9 +234,9 @@ class EigenWindow(Adw.ApplicationWindow):
         B = np.array(self.matrix_data2.data)
         op = self.op_handler.get_selected_op()
         try:
-            if op == "+":
+            if op == 0:
                 result = A + B
-            elif op == "-":
+            elif op == 1:
                 result = A - B
             else:
                 if A.shape == (1, 1):
@@ -335,7 +336,7 @@ class EigenWindow(Adw.ApplicationWindow):
         choice = self.decomposition_handler.get_selected_key()   # 0 or 1 :contentReference[oaicite:1]{index=1}
         self.matrix_control_box2.set_visible(choice == 0)
         self.action_panel2.set_visible(choice == 0)
-        self.op_dropdown.set_visible(choice == 0)
+        self.op_dropdown_box.set_visible(choice == 0)
         self.additional_content.set_visible(choice == 0)
         self.decompose_button.set_label("Calculate" if choice == 0 else "Decompose")
 
@@ -349,6 +350,14 @@ class EigenWindow(Adw.ApplicationWindow):
             self.matrix_view2.set_halign(Gtk.Align.CENTER)
 
             self.additional_content.insert_child_after(self.matrix_view2, self.matrix_control_box2)
+
+            self.rows_dropdown2.handler_block(self._rows2_handler)
+            self.cols_dropdown2.handler_block(self._cols2_handler)
+            self.rows_dropdown2.set_selected(self.current_rows - 1)
+            self.cols_dropdown2.set_selected(self.current_cols - 1)
+            self.rows_dropdown2.handler_unblock(self._rows2_handler)
+            self.cols_dropdown2.handler_unblock(self._cols2_handler)
+            self.current_rows2, self.current_cols2 = self.current_rows, self.current_cols
 
             self.matrix_data2 = MatrixData(self.current_rows, self.current_cols)
             self.matrix_view2.set_matrix(self.matrix_data2)
