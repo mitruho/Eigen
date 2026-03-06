@@ -17,30 +17,30 @@ class EigenWindow(Adw.ApplicationWindow):
     """
     __gtype_name__ = 'EigenWindow'
 
-    matrix_one_menu = Gtk.Template.Child()
+    matrix_menu_main = Gtk.Template.Child()
     matrices_box = Gtk.Template.Child()
     decomposition_dropdown = Gtk.Template.Child()
     op_dropdown = Gtk.Template.Child()
     op_dropdown_box = Gtk.Template.Child()
-    matrix_control_box = Gtk.Template.Child()
-    matrix_control_box2   = Gtk.Template.Child()
-    rows_dropdown = Gtk.Template.Child()
-    cols_dropdown = Gtk.Template.Child()
-    rows_dropdown2 = Gtk.Template.Child()
-    cols_dropdown2 = Gtk.Template.Child()
-    action_panel = Gtk.Template.Child()
-    action_panel2 = Gtk.Template.Child()
-    matrix_transpose_button = Gtk.Template.Child()
-    matrix_invert_button = Gtk.Template.Child()
-    matrix_copy_button = Gtk.Template.Child()
-    matrix_paste_button = Gtk.Template.Child()
-    matrix_cleanup_button = Gtk.Template.Child()
-    matrix_transpose_button2 = Gtk.Template.Child()
-    matrix_invert_button2 = Gtk.Template.Child()
-    matrix_copy_button2 = Gtk.Template.Child()
-    matrix_paste_button2 = Gtk.Template.Child()
-    matrix_cleanup_button2 = Gtk.Template.Child()
-    additional_content = Gtk.Template.Child()
+    matrix_control_box_main = Gtk.Template.Child()
+    matrix_control_box_2   = Gtk.Template.Child()
+    rows_dropdown_main = Gtk.Template.Child()
+    cols_dropdown_main = Gtk.Template.Child()
+    rows_dropdown_2 = Gtk.Template.Child()
+    cols_dropdown_2 = Gtk.Template.Child()
+    action_panel_main = Gtk.Template.Child()
+    action_panel_2 = Gtk.Template.Child()
+    matrix_transpose_button_main = Gtk.Template.Child()
+    matrix_invert_button_main = Gtk.Template.Child()
+    matrix_copy_button_main = Gtk.Template.Child()
+    matrix_paste_button_main = Gtk.Template.Child()
+    matrix_cleanup_button_main = Gtk.Template.Child()
+    matrix_transpose_button_2 = Gtk.Template.Child()
+    matrix_invert_button_2 = Gtk.Template.Child()
+    matrix_copy_button_2 = Gtk.Template.Child()
+    matrix_paste_button_2 = Gtk.Template.Child()
+    matrix_cleanup_button_2 = Gtk.Template.Child()
+    matrix_menu_2 = Gtk.Template.Child()
     decompose_button = Gtk.Template.Child()
     def __init__(self, **kwargs):
         """
@@ -54,27 +54,27 @@ class EigenWindow(Adw.ApplicationWindow):
         self.connect('unrealize', self.save_window_properties)
 
         self.decomposition_handler = DecompositionHandler(self.decomposition_dropdown)
-        self.size_handler = SizeHandler(self.rows_dropdown, self.cols_dropdown)
-        self.size_handler2 = SizeHandler(self.rows_dropdown2, self.cols_dropdown2)
+        self.size_handler = SizeHandler(self.rows_dropdown_main, self.cols_dropdown_main)
+        self.size_handler2 = SizeHandler(self.rows_dropdown_2, self.cols_dropdown_2)
         self.op_handler = OpHandler(self.op_dropdown)
         self.update_matrix_size()
         self.update_matrix2_size()
         self.setup_matrix_view()
 
-        self._rows_handler = self.rows_dropdown.connect('notify::selected', self.on_size_changed)
-        self._cols_handler = self.cols_dropdown.connect('notify::selected', self.on_size_changed)
-        self._rows2_handler = self.rows_dropdown2.connect('notify::selected', self.on_size_changed2)
-        self._cols2_handler = self.cols_dropdown2.connect('notify::selected', self.on_size_changed2)
-        self.matrix_cleanup_button.connect('clicked', self.on_matrix_cleanup_clicked)
-        self.matrix_copy_button.connect('clicked', self.on_matrix_copy_clicked)
-        self.matrix_paste_button.connect('clicked', self.on_matrix_paste_clicked)
-        self.matrix_transpose_button.connect('clicked', self.on_matrix_transpose_clicked)
-        self.matrix_invert_button.connect('clicked', self.on_matrix_invert_clicked)
-        self.matrix_cleanup_button2.connect('clicked', self.on_matrix_cleanup2_clicked)
-        self.matrix_copy_button2.connect('clicked', self.on_matrix_copy2_clicked)
-        self.matrix_paste_button2.connect('clicked', self.on_matrix_paste2_clicked)
-        self.matrix_transpose_button2.connect('clicked', self.on_matrix_transpose2_clicked)
-        self.matrix_invert_button2.connect('clicked', self.on_matrix_invert2_clicked)
+        self._rows_handler = self.rows_dropdown_main.connect('notify::selected', self.on_size_changed)
+        self._cols_handler = self.cols_dropdown_main.connect('notify::selected', self.on_size_changed)
+        self._rows2_handler = self.rows_dropdown_2.connect('notify::selected', self.on_size_changed2)
+        self._cols2_handler = self.cols_dropdown_2.connect('notify::selected', self.on_size_changed2)
+        self.matrix_cleanup_button_main.connect('clicked', self.on_matrix_cleanup_clicked)
+        self.matrix_copy_button_main.connect('clicked', self.on_matrix_copy_clicked)
+        self.matrix_paste_button_main.connect('clicked', self.on_matrix_paste_clicked)
+        self.matrix_transpose_button_main.connect('clicked', self.on_matrix_transpose_clicked)
+        self.matrix_invert_button_main.connect('clicked', self.on_matrix_invert_clicked)
+        self.matrix_cleanup_button_2.connect('clicked', self.on_matrix_cleanup2_clicked)
+        self.matrix_copy_button_2.connect('clicked', self.on_matrix_copy2_clicked)
+        self.matrix_paste_button_2.connect('clicked', self.on_matrix_paste2_clicked)
+        self.matrix_transpose_button_2.connect('clicked', self.on_matrix_transpose2_clicked)
+        self.matrix_invert_button_2.connect('clicked', self.on_matrix_invert2_clicked)
         self.decompose_button.connect('clicked', self.on_decompose_clicked)
         self.decomposition_dropdown.connect("notify::selected", self.on_decomposition_changed)
         self.on_decomposition_changed()
@@ -101,7 +101,7 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_view.set_row_spacing(5)
         self.matrix_view.set_column_spacing(5)
         self.matrix_view.set_halign(Gtk.Align.CENTER)
-        self.matrix_one_menu.insert_child_after(self.matrix_view, self.matrix_control_box)
+        self.matrix_menu_main.insert_child_after(self.matrix_view, self.matrix_control_box_main)
 
         self.matrix_data = MatrixData(self.current_rows, self.current_cols)
         self.matrix_view.set_matrix(self.matrix_data)
@@ -175,12 +175,12 @@ class EigenWindow(Adw.ApplicationWindow):
         new_rows, new_cols = len(data), len(data[0])
         if new_rows > 7 or new_cols > 7:
             return
-        self.rows_dropdown.handler_block(self._rows_handler)
-        self.cols_dropdown.handler_block(self._cols_handler)
-        self.rows_dropdown.set_selected(new_rows - 1)
-        self.cols_dropdown.set_selected(new_cols - 1)
-        self.rows_dropdown.handler_unblock(self._rows_handler)
-        self.cols_dropdown.handler_unblock(self._cols_handler)
+        self.rows_dropdown_main.handler_block(self._rows_handler)
+        self.cols_dropdown_main.handler_block(self._cols_handler)
+        self.rows_dropdown_main.set_selected(new_rows - 1)
+        self.cols_dropdown_main.set_selected(new_cols - 1)
+        self.rows_dropdown_main.handler_unblock(self._rows_handler)
+        self.cols_dropdown_main.handler_unblock(self._cols_handler)
         self.matrix_data.rows = new_rows
         self.matrix_data.cols = new_cols
         self.matrix_data.data = data
@@ -200,12 +200,12 @@ class EigenWindow(Adw.ApplicationWindow):
         new_rows, new_cols = len(data), len(data[0])
         if new_rows > 7 or new_cols > 7:
             return
-        self.rows_dropdown2.handler_block(self._rows2_handler)
-        self.cols_dropdown2.handler_block(self._cols2_handler)
-        self.rows_dropdown2.set_selected(new_rows - 1)
-        self.cols_dropdown2.set_selected(new_cols - 1)
-        self.rows_dropdown2.handler_unblock(self._rows2_handler)
-        self.cols_dropdown2.handler_unblock(self._cols2_handler)
+        self.rows_dropdown_2.handler_block(self._rows2_handler)
+        self.cols_dropdown_2.handler_block(self._cols2_handler)
+        self.rows_dropdown_2.set_selected(new_rows - 1)
+        self.cols_dropdown_2.set_selected(new_cols - 1)
+        self.rows_dropdown_2.handler_unblock(self._rows2_handler)
+        self.cols_dropdown_2.handler_unblock(self._cols2_handler)
         self.matrix_data2.rows = new_rows
         self.matrix_data2.cols = new_cols
         self.matrix_data2.data = data
@@ -233,6 +233,7 @@ class EigenWindow(Adw.ApplicationWindow):
         A = np.array(self.matrix_data.data)
         B = np.array(self.matrix_data2.data)
         op = self.op_handler.get_selected_op()
+        print(op)
         try:
             if op == 0:
                 result = A + B
@@ -274,12 +275,12 @@ class EigenWindow(Adw.ApplicationWindow):
         transposed = np.array(self.matrix_data2.data).T
         new_rows, new_cols = transposed.shape
 
-        self.rows_dropdown2.handler_block(self._rows2_handler)
-        self.cols_dropdown2.handler_block(self._cols2_handler)
-        self.rows_dropdown2.set_selected(new_rows - 1)
-        self.cols_dropdown2.set_selected(new_cols - 1)
-        self.rows_dropdown2.handler_unblock(self._rows2_handler)
-        self.cols_dropdown2.handler_unblock(self._cols2_handler)
+        self.rows_dropdown_2.handler_block(self._rows2_handler)
+        self.cols_dropdown_2.handler_block(self._cols2_handler)
+        self.rows_dropdown_2.set_selected(new_rows - 1)
+        self.cols_dropdown_2.set_selected(new_cols - 1)
+        self.rows_dropdown_2.handler_unblock(self._rows2_handler)
+        self.cols_dropdown_2.handler_unblock(self._cols2_handler)
 
         self.matrix_data2.rows = new_rows
         self.matrix_data2.cols = new_cols
@@ -292,12 +293,12 @@ class EigenWindow(Adw.ApplicationWindow):
         transposed = np.array(self.matrix_data.data).T
         new_rows, new_cols = transposed.shape
 
-        self.rows_dropdown.handler_block(self._rows_handler)
-        self.cols_dropdown.handler_block(self._cols_handler)
-        self.rows_dropdown.set_selected(new_rows - 1)
-        self.cols_dropdown.set_selected(new_cols - 1)
-        self.rows_dropdown.handler_unblock(self._rows_handler)
-        self.cols_dropdown.handler_unblock(self._cols_handler)
+        self.rows_dropdown_main.handler_block(self._rows_handler)
+        self.cols_dropdown_main.handler_block(self._cols_handler)
+        self.rows_dropdown_main.set_selected(new_rows - 1)
+        self.cols_dropdown_main.set_selected(new_cols - 1)
+        self.rows_dropdown_main.handler_unblock(self._rows_handler)
+        self.cols_dropdown_main.handler_unblock(self._cols_handler)
 
         self.matrix_data.rows = new_rows
         self.matrix_data.cols = new_cols
@@ -334,10 +335,10 @@ class EigenWindow(Adw.ApplicationWindow):
 
     def on_decomposition_changed(self, *args):
         choice = self.decomposition_handler.get_selected_key()   # 0 or 1 :contentReference[oaicite:1]{index=1}
-        self.matrix_control_box2.set_visible(choice == 0)
-        self.action_panel2.set_visible(choice == 0)
+        self.matrix_control_box_2.set_visible(choice == 0)
+        self.action_panel_2.set_visible(choice == 0)
         self.op_dropdown_box.set_visible(choice == 0)
-        self.additional_content.set_visible(choice == 0)
+        self.matrix_menu_2.set_visible(choice == 0)
         self.decompose_button.set_label("Calculate" if choice == 0 else "Decompose")
 
     # ---------- create ----------
@@ -349,14 +350,14 @@ class EigenWindow(Adw.ApplicationWindow):
             self.matrix_view2.set_column_spacing(5)
             self.matrix_view2.set_halign(Gtk.Align.CENTER)
 
-            self.additional_content.insert_child_after(self.matrix_view2, self.matrix_control_box2)
+            self.matrix_menu_2.insert_child_after(self.matrix_view2, self.matrix_control_box_2)
 
-            self.rows_dropdown2.handler_block(self._rows2_handler)
-            self.cols_dropdown2.handler_block(self._cols2_handler)
-            self.rows_dropdown2.set_selected(self.current_rows - 1)
-            self.cols_dropdown2.set_selected(self.current_cols - 1)
-            self.rows_dropdown2.handler_unblock(self._rows2_handler)
-            self.cols_dropdown2.handler_unblock(self._cols2_handler)
+            self.rows_dropdown_2.handler_block(self._rows2_handler)
+            self.cols_dropdown_2.handler_block(self._cols2_handler)
+            self.rows_dropdown_2.set_selected(self.current_rows - 1)
+            self.cols_dropdown_2.set_selected(self.current_cols - 1)
+            self.rows_dropdown_2.handler_unblock(self._rows2_handler)
+            self.cols_dropdown_2.handler_unblock(self._cols2_handler)
             self.current_rows2, self.current_cols2 = self.current_rows, self.current_cols
 
             self.matrix_data2 = MatrixData(self.current_rows, self.current_cols)
