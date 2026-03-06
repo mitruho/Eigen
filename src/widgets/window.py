@@ -230,7 +230,7 @@ class EigenWindow(Adw.ApplicationWindow):
     def _run_calculator(self):
         A = np.array(self.matrix_data.data)
         B = np.array(self.matrix_data2.data)
-        op = self.get_selected_op()
+        op = self.op_handler.get_selected_op()
         try:
             if op == "+":
                 result = A + B
@@ -329,9 +329,6 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_data2.data = inverted.tolist()
         self.matrix_view2.set_matrix(self.matrix_data2)
         self.matrix_view2.load_matrix_values()
-
-    def get_selected_op(self):
-        return ("+", "-", "·")[self.op_dropdown.get_selected()]
 
     def on_decomposition_changed(self, *args):
         choice = self.decomposition_handler.get_selected_key()   # 0 or 1 :contentReference[oaicite:1]{index=1}

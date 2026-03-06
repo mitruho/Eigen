@@ -33,23 +33,9 @@ class MatrixView(Gtk.Grid):
         Updates the MatrixView to match the current matrix data.
         """
         rows, cols = self.matrix_data.rows, self.matrix_data.cols
-        self.set_margins(cols)
         self.remove_old_entries(rows, cols)
         self.update_existing_entries(rows, cols)
         self.add_new_entries(rows, cols)
-
-    def set_margins(self, cols, window_width=420, element_width=58):
-        """
-        Sets margins for the MatrixView such that the size of elements remains fixed.
-
-        Args:
-        cols (int): Number of columns in the MatrixView.
-        window_width (int, optional): Total width of the window.
-        element_width (int, optional): Fixed width of each MatrixView element.
-        """
-        margin = (window_width - cols * element_width) / 2
-        self.set_margin_start(margin)
-        self.set_margin_end(margin)
 
     def remove_old_entries(self, rows, cols):
         """
@@ -94,7 +80,6 @@ class MatrixView(Gtk.Grid):
                     self.entries[(row, col)] = entry
                     entry.set_transition_type(Gtk.RevealerTransitionType.CROSSFADE)
                     entry.set_transition_duration(500)
-                    self.entries[(row, col)] = entry
                     self.attach(entry, col, row, 1, 1)
                     entry.set_reveal_child(True)
 
