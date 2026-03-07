@@ -1,8 +1,18 @@
 <div align="center">
   <img src="./data/icons/hicolor/scalable/apps/com.github.elahpeca.Eigen.svg" height="128"/><h1>Eigen</h1>
 </div>
-Nice and simple app for matrix decomposition.
+*Nice and simple matrix calculator*
 
+Eigen is a GTK4 matrix calculator, designed with ease of use and elegance in mind.
+
+It supports:
+✅ Main matrix-matrix and matrix-scalar operations
+✅ Transposition and matrix inversion
+✅ Eigendecomposition, as well as other decompositions, such as QR, LU
+
+⚙️ Eigen uses NumPy matrix format, and makes working with them quite easy!
+
+⚠️ Eigen is a very young app, so you're welcome to report the issues!
 ## Dependencies
 
 - gtk4
