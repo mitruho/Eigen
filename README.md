@@ -13,6 +13,8 @@ It supports:
 
 ✅ Eigendecomposition, as well as other decompositions, such as QR, LU
 
+<hr>
+
 ⚙️ Eigen uses NumPy matrix format, and makes working with them quite easy!
 
 ⚠️ Eigen is a very young app, so you're welcome to report the issues!
