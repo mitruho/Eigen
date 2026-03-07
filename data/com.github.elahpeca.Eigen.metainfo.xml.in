@@ -3,7 +3,20 @@
 	<id>com.github.elahpeca.Eigen</id>
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>GPL-3.0-or-later</project_license>
+	<name>Eigen</name>
+	<summary> Nice and simple matrix calculator </summary>
 	<description>
-	  <p>Nice and simple app for matrix decomposition.</p>
+		<p>Eigen is a GTK4 matrix calculator, designed with ease of use and elegance in mind.</p>
+		<p>It supports:</p>
+		<ul>
+			<li>✅Main matrix-matrix and matrix-scalar operations</li>
+			<li>✅Transposition and matrix inversion</li>
+			<li>✅Eigendecomposition, as well as other decompositions, such as QR, LU</li>
+		</ul>
 	</description>
+	<screenshots>
+
+	</screenshots>
+	<url type="homepage">https://github.com/elahpeca/Eigen</url>
+	<url type="bugtracker">https://github.com/elahpeca/Eigen/issues</url>
 </component>
