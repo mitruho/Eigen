@@ -6,8 +6,11 @@
 Eigen is a GTK4 matrix calculator, designed with ease of use and elegance in mind.
 
 It supports:
+
 ✅ Main matrix-matrix and matrix-scalar operations
+
 ✅ Transposition and matrix inversion
+
 ✅ Eigendecomposition, as well as other decompositions, such as QR, LU
 
 ⚙️ Eigen uses NumPy matrix format, and makes working with them quite easy!
