@@ -1,7 +1,7 @@
 <div align="center">
   <img src="./data/icons/hicolor/scalable/apps/com.github.elahpeca.Eigen.svg" height="128"/><h1>Eigen</h1>
 </div>
-*Nice and simple matrix calculator*
+<b>Nice and simple matrix calculator</b>
 
 Eigen is a GTK4 matrix calculator, designed with ease of use and elegance in mind.
 
