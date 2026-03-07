@@ -31,18 +31,35 @@ def _make_copy_button(text):
     btn.connect("clicked", lambda _, t=text: _copy_to_clipboard(t))
     return btn
 
+def _add_matrix_rows_group(box, title, mat):
+    """Add a PreferencesGroup with one ActionRow per matrix row and a copy-as-matrix button."""
+    group = Adw.PreferencesGroup()
+    group.set_title(title)
+    box.append(group)
 
-class ResultWindow(Adw.Dialog):
-    """Dialog that displays eigenvalue decomposition results."""
+    for r in range(mat.shape[0]):
+        text = _format_vector(mat[r])
+        row = Adw.ActionRow()
+        row.set_title(f"Row {r + 1}")
+        row.set_subtitle(text)
+        row.add_suffix(_make_copy_button(text))
+        group.add(row)
 
-    def __init__(self, eigenvalues, eigenvectors):
+    copy_btn = Gtk.Button(label="Copy as matrix")
+    copy_btn.add_css_class("pill")
+    copy_btn.set_halign(Gtk.Align.END)
+    copy_btn.connect("clicked", lambda _, m=mat: _copy_to_clipboard(_format_matrix(m)))
+    box.append(copy_btn)
+
+
+class _BaseResultDialog(Adw.Dialog):
+    """Shared scaffold (toolbar, header, scroll, content box) for all result dialogs."""
+
+    def __init__(self, title, width=480, height=400):
         super().__init__()
-        self.set_title("Decomposition Result")
-        self.set_content_width(420)
-        self.set_content_height(400)
-
-        self.eigenvalues = eigenvalues
-        self.eigenvectors = eigenvectors
+        self.set_title(title)
+        self.set_content_width(width)
+        self.set_content_height(height)
 
         toolbar_view = Adw.ToolbarView()
         self.set_child(toolbar_view)
@@ -52,17 +69,24 @@ class ResultWindow(Adw.Dialog):
         scroll.set_propagate_natural_height(True)
         toolbar_view.set_content(scroll)
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        box.set_margin_top(18)
-        box.set_margin_bottom(18)
-        box.set_margin_start(18)
-        box.set_margin_end(18)
-        scroll.set_child(box)
+        self._box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        self._box.set_margin_top(18)
+        self._box.set_margin_bottom(18)
+        self._box.set_margin_start(18)
+        self._box.set_margin_end(18)
+        scroll.set_child(self._box)
+
+
+class ResultWindow(_BaseResultDialog):
+    """Dialog that displays eigenvalue decomposition results."""
+
+    def __init__(self, eigenvalues, eigenvectors):
+        super().__init__("Decomposition Result")
 
         # Eigenvalues section
         ev_group = Adw.PreferencesGroup()
         ev_group.set_title("Eigenvalues")
-        box.append(ev_group)
+        self._box.append(ev_group)
 
         for i, val in enumerate(eigenvalues):
             text = _format_scalar(val)
@@ -76,12 +100,12 @@ class ResultWindow(Adw.Dialog):
         copy_ev_btn.add_css_class("pill")
         copy_ev_btn.set_halign(Gtk.Align.END)
         copy_ev_btn.connect("clicked", lambda _: _copy_to_clipboard(_format_vector(eigenvalues)))
-        box.append(copy_ev_btn)
+        self._box.append(copy_ev_btn)
 
         # Eigenvectors section
         evec_group = Adw.PreferencesGroup()
         evec_group.set_title("Eigenvectors")
-        box.append(evec_group)
+        self._box.append(evec_group)
 
         for i in range(eigenvectors.shape[1]):
             col = eigenvectors[:, i]
@@ -96,156 +120,30 @@ class ResultWindow(Adw.Dialog):
         copy_evec_btn.add_css_class("pill")
         copy_evec_btn.set_halign(Gtk.Align.END)
         copy_evec_btn.connect("clicked", lambda _: _copy_to_clipboard(_format_matrix(eigenvectors)))
-        box.append(copy_evec_btn)
+        self._box.append(copy_evec_btn)
 
 
-class QRResultWindow(Adw.Dialog):
+class QRResultWindow(_BaseResultDialog):
     """Dialog that displays QR decomposition results."""
 
     def __init__(self, Q, R):
-        super().__init__()
-        self.set_title("QR Decomposition Result")
-        self.set_content_width(420)
-        self.set_content_height(400)
-
-        toolbar_view = Adw.ToolbarView()
-        self.set_child(toolbar_view)
-        toolbar_view.add_top_bar(Adw.HeaderBar())
-
-        scroll = Gtk.ScrolledWindow()
-        scroll.set_propagate_natural_height(True)
-        toolbar_view.set_content(scroll)
-
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        box.set_margin_top(18)
-        box.set_margin_bottom(18)
-        box.set_margin_start(18)
-        box.set_margin_end(18)
-        scroll.set_child(box)
-
-        # Q matrix section
-        q_group = Adw.PreferencesGroup()
-        q_group.set_title("Q (Orthonormal)")
-        box.append(q_group)
-
-        for r in range(Q.shape[0]):
-            text = _format_vector(Q[r])
-            row = Adw.ActionRow()
-            row.set_title(f"Row {r + 1}")
-            row.set_subtitle(text)
-            row.add_suffix(_make_copy_button(text))
-            q_group.add(row)
-
-        copy_q_btn = Gtk.Button(label="Copy as matrix")
-        copy_q_btn.add_css_class("pill")
-        copy_q_btn.set_halign(Gtk.Align.END)
-        copy_q_btn.connect("clicked", lambda _: _copy_to_clipboard(_format_matrix(Q)))
-        box.append(copy_q_btn)
-
-        # R matrix section
-        r_group = Adw.PreferencesGroup()
-        r_group.set_title("R (Upper Triangular)")
-        box.append(r_group)
-
-        for i in range(R.shape[0]):
-            text = _format_vector(R[i])
-            row = Adw.ActionRow()
-            row.set_title(f"Row {i + 1}")
-            row.set_subtitle(text)
-            row.add_suffix(_make_copy_button(text))
-            r_group.add(row)
-
-        copy_r_btn = Gtk.Button(label="Copy as matrix")
-        copy_r_btn.add_css_class("pill")
-        copy_r_btn.set_halign(Gtk.Align.END)
-        copy_r_btn.connect("clicked", lambda _: _copy_to_clipboard(_format_matrix(R)))
-        box.append(copy_r_btn)
+        super().__init__("QR Decomposition Result")
+        _add_matrix_rows_group(self._box, "Q (Orthonormal)", Q)
+        _add_matrix_rows_group(self._box, "R (Upper Triangular)", R)
 
 
-class LUResultWindow(Adw.Dialog):
+class LUResultWindow(_BaseResultDialog):
     """Dialog that displays LU decomposition results."""
 
     def __init__(self, L, U):
-        super().__init__()
-        self.set_title("LU Decomposition Result")
-        self.set_content_width(420)
-        self.set_content_height(400)
-
-        toolbar_view = Adw.ToolbarView()
-        self.set_child(toolbar_view)
-        toolbar_view.add_top_bar(Adw.HeaderBar())
-
-        scroll = Gtk.ScrolledWindow()
-        scroll.set_propagate_natural_height(True)
-        toolbar_view.set_content(scroll)
-
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        box.set_margin_top(18)
-        box.set_margin_bottom(18)
-        box.set_margin_start(18)
-        box.set_margin_end(18)
-        scroll.set_child(box)
-
-        for label, mat in [("L (Lower Triangular)", L), ("U (Upper Triangular)", U)]:
-            group = Adw.PreferencesGroup()
-            group.set_title(label)
-            box.append(group)
-
-            for r in range(mat.shape[0]):
-                text = _format_vector(mat[r])
-                row = Adw.ActionRow()
-                row.set_title(f"Row {r + 1}")
-                row.set_subtitle(text)
-                row.add_suffix(_make_copy_button(text))
-                group.add(row)
-
-            copy_btn = Gtk.Button(label="Copy as matrix")
-            copy_btn.add_css_class("pill")
-            copy_btn.set_halign(Gtk.Align.END)
-            copy_btn.connect("clicked", lambda _, m=mat: _copy_to_clipboard(_format_matrix(m)))
-            box.append(copy_btn)
+        super().__init__("LU Decomposition Result")
+        _add_matrix_rows_group(self._box, "L (Lower Triangular)", L)
+        _add_matrix_rows_group(self._box, "U (Upper Triangular)", U)
 
 
-class CalcResultDialog(Adw.Dialog):
+class CalcResultDialog(_BaseResultDialog):
     """Dialog that displays the result of a matrix arithmetic operation."""
 
     def __init__(self, result):
-        super().__init__()
-        self.set_title("Result")
-        self.set_content_width(420)
-        self.set_content_height(350)
-
-        self._result = result
-
-        toolbar_view = Adw.ToolbarView()
-        self.set_child(toolbar_view)
-        toolbar_view.add_top_bar(Adw.HeaderBar())
-
-        scroll = Gtk.ScrolledWindow()
-        scroll.set_propagate_natural_height(True)
-        toolbar_view.set_content(scroll)
-
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        box.set_margin_top(18)
-        box.set_margin_bottom(18)
-        box.set_margin_start(18)
-        box.set_margin_end(18)
-        scroll.set_child(box)
-
-        group = Adw.PreferencesGroup()
-        group.set_title("Result Matrix")
-        box.append(group)
-
-        for r in range(result.shape[0]):
-            text = _format_vector(result[r])
-            row = Adw.ActionRow()
-            row.set_title(f"Row {r + 1}")
-            row.set_subtitle(text)
-            row.add_suffix(_make_copy_button(text))
-            group.add(row)
-
-        copy_btn = Gtk.Button(label="Copy as matrix")
-        copy_btn.add_css_class("pill")
-        copy_btn.set_halign(Gtk.Align.END)
-        copy_btn.connect("clicked", lambda _: _copy_to_clipboard(_format_matrix(result)))
-        box.append(copy_btn)
+        super().__init__("Result", height=350)
+        _add_matrix_rows_group(self._box, "Result Matrix", result)

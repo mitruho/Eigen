@@ -80,6 +80,23 @@ class EigenWindow(Adw.ApplicationWindow):
         self.mode_dropdown.connect("notify::selected", self.on_decomposition_changed)
         self.on_decomposition_changed()
 
+    def _show_error(self, msg="Operation not applicable."):
+        dialog = Adw.AlertDialog(heading="Error!", body=msg)
+        dialog.add_response("ok", "OK")
+        dialog.present(self)
+
+    def _configure_matrix_view(self, view):
+        view.set_row_homogeneous(True)
+        view.set_column_homogeneous(True)
+        view.set_row_spacing(5)
+        view.set_column_spacing(5)
+        view.set_halign(Gtk.Align.CENTER)
+
+    def _copy_matrix(self, matrix_data):
+        Gdk.Display.get_default().get_clipboard().set_content(
+            Gdk.ContentProvider.new_for_value(str(matrix_data.data))
+        )
+
     def save_window_properties(self, *args):
         """
         Save window size to settings when it is unrealized (closed).
@@ -97,11 +114,7 @@ class EigenWindow(Adw.ApplicationWindow):
         and binds it to the matrix data.
         """
         self.matrix_view = MatrixView()
-        self.matrix_view.set_row_homogeneous(True)
-        self.matrix_view.set_column_homogeneous(True)
-        self.matrix_view.set_row_spacing(5)
-        self.matrix_view.set_column_spacing(5)
-        self.matrix_view.set_halign(Gtk.Align.CENTER)
+        self._configure_matrix_view(self.matrix_view)
         self.matrix_menu_main.insert_child_after(self.matrix_view, self.matrix_control_box_main)
 
         self.matrix_data = MatrixData(self.current_rows, self.current_cols)
@@ -137,16 +150,7 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_view2.set_matrix(self.matrix_data2)
 
     def on_matrix_copy_clicked(self, button):
-        """
-        Handle the event when the matrix copy button is clicked.
-
-        Args:
-            button: The button that triggered the event.
-        """
-        display = Gdk.Display.get_default()
-        clipboard = display.get_clipboard()
-        content_provider = Gdk.ContentProvider.new_for_value(str(self.matrix_data.data))
-        clipboard.set_content(content_provider)
+        self._copy_matrix(self.matrix_data)
 
     def _parse_matrix_text(self, text):
         """Parse clipboard text into a 2D list of floats, or return None on failure."""
@@ -165,6 +169,12 @@ class EigenWindow(Adw.ApplicationWindow):
             pass
 
     def on_matrix_paste_clicked(self, button):
+        """
+        Paste the matrix in the clipboard into the entries
+
+        Args:
+            button: The button that triggered the event.
+        """
         clipboard = Gdk.Display.get_default().get_clipboard()
         clipboard.read_text_async(None, self._on_paste_text_ready)
 
@@ -227,32 +237,25 @@ class EigenWindow(Adw.ApplicationWindow):
             self._run_calculator()
         elif self.mode_handler.get_selected_key() == 1:
             try:
-                self.eigenvalues, self.eigenvectors = np.linalg.eig(self.matrix_data.data)
+                eigenvalues, eigenvectors = np.linalg.eig(self.matrix_data.data)
             except ValueError:
-                dialog = Adw.AlertDialog(heading="Error!", body="Operation not applicable.")
-                dialog.add_response("ok", "OK")
-                dialog.present(self)
+                self._show_error()
                 return
-            ResultWindow(self.eigenvalues, self.eigenvectors).present(self)
+            ResultWindow(eigenvalues, eigenvectors).present(self)
         elif self.mode_handler.get_selected_key() == 2:
             try:
-                self.orthonormal, self.upper_trian = np.linalg.qr(self.matrix_data.data)
+                Q, R = np.linalg.qr(self.matrix_data.data)
             except ValueError:
-                dialog = Adw.AlertDialog(heading="Error!", body="Operation not applicable.")
-                dialog.add_response("ok", "OK")
-                dialog.present(self)
+                self._show_error()
                 return
-
-            QRResultWindow(self.orthonormal, self.upper_trian).present(self)
+            QRResultWindow(Q, R).present(self)
         elif self.mode_handler.get_selected_key() == 3:
             try:
-                self.L, self.U = lu(self.matrix_data.data)
+                L, U = lu(self.matrix_data.data)
             except ValueError:
-                dialog = Adw.AlertDialog(heading="Error!", body="Operation not applicable.")
-                dialog.add_response("ok", "OK")
-                dialog.present(self)
+                self._show_error()
                 return
-            LUResultWindow(self.L, self.U).present(self)
+            LUResultWindow(L, U).present(self)
 
     def _run_calculator(self):
         A = np.array(self.matrix_data.data)
@@ -271,9 +274,7 @@ class EigenWindow(Adw.ApplicationWindow):
                 else:
                     result = A @ B
         except ValueError:
-            dialog = Adw.AlertDialog(heading="Error!", body="Operation not applicable.")
-            dialog.add_response("ok", "OK")
-            dialog.present(self)
+            self._show_error()
             return
         CalcResultDialog(result).present(self)
 
@@ -287,10 +288,7 @@ class EigenWindow(Adw.ApplicationWindow):
         self.matrix_view.clear_matrix(self.current_rows, self.current_cols)
 
     def on_matrix_copy2_clicked(self, button):
-        display = Gdk.Display.get_default()
-        clipboard = display.get_clipboard()
-        content_provider = Gdk.ContentProvider.new_for_value(str(self.matrix_data2.data))
-        clipboard.set_content(content_provider)
+        self._copy_matrix(self.matrix_data2)
 
     def on_matrix_cleanup2_clicked(self, button):
         self.matrix_view2.clear_matrix(self.current_rows2, self.current_cols2)
@@ -336,9 +334,7 @@ class EigenWindow(Adw.ApplicationWindow):
         try:
             inverted = np.linalg.inv(M)
         except np.linalg.LinAlgError:
-            dialog = Adw.AlertDialog(heading="Error!", body="Matrix is singular and cannot be inverted.")
-            dialog.add_response("ok", "OK")
-            dialog.present(self)
+            self._show_error("Matrix is singular and cannot be inverted.")
             return
         self.matrix_data.data = inverted.tolist()
         self.matrix_view.set_matrix(self.matrix_data)
@@ -349,30 +345,24 @@ class EigenWindow(Adw.ApplicationWindow):
         try:
             inverted = np.linalg.inv(M)
         except np.linalg.LinAlgError:
-            dialog = Adw.AlertDialog(heading="Error!", body="Matrix is singular and cannot be inverted.")
-            dialog.add_response("ok", "OK")
-            dialog.present(self)
+            self._show_error("Matrix is singular and cannot be inverted.")
             return
         self.matrix_data2.data = inverted.tolist()
         self.matrix_view2.set_matrix(self.matrix_data2)
         self.matrix_view2.load_matrix_values()
 
     def on_decomposition_changed(self, *args):
-        choice = self.mode_handler.get_selected_key()   # 0 or 1 :contentReference[oaicite:1]{index=1}
+        choice = self.mode_handler.get_selected_key()
         self.matrix_control_box_2.set_visible(choice == 0)
         self.action_panel_2.set_visible(choice == 0)
         self.op_dropdown_box.set_visible(choice == 0)
         self.matrix_menu_2.set_visible(choice == 0)
         self.execute_button.set_label("Calculate" if choice == 0 else "Decompose")
 
-    # ---------- create ----------
+        # ---------- create ----------
         if choice == 0 and not hasattr(self, "matrix_view2"):
             self.matrix_view2 = MatrixView()
-            self.matrix_view2.set_row_homogeneous(True)
-            self.matrix_view2.set_column_homogeneous(True)
-            self.matrix_view2.set_row_spacing(5)
-            self.matrix_view2.set_column_spacing(5)
-            self.matrix_view2.set_halign(Gtk.Align.CENTER)
+            self._configure_matrix_view(self.matrix_view2)
 
             self.matrix_menu_2.insert_child_after(self.matrix_view2, self.matrix_control_box_2)
 
@@ -387,7 +377,7 @@ class EigenWindow(Adw.ApplicationWindow):
             self.matrix_data2 = MatrixData(self.current_rows, self.current_cols)
             self.matrix_view2.set_matrix(self.matrix_data2)
 
-    # ---------- remove ----------
+        # ---------- remove ----------
         elif choice != 0 and hasattr(self, "matrix_view2"):
             self.matrix_view2.unparent()
             del self.matrix_view2
