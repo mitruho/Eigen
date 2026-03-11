@@ -13,7 +13,7 @@ class EigenApplication(Adw.Application):
             flags=Gio.ApplicationFlags.DEFAULT_FLAGS
         )
 
-        self.set_resource_base_path('/com/github/elahpeca/Eigen')
+        self.set_resource_base_path('/io/github/elahpeca/Eigen')
         self.style_manager = Adw.StyleManager.get_default()
         self.settings = Gio.Settings.new('io.github.elahpeca.Eigen')
 

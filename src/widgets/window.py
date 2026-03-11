@@ -9,7 +9,7 @@ from .size_handler import SizeHandler
 from .op_handler import OpHandler
 from .result_window import ResultWindow, CalcResultDialog, QRResultWindow, LUResultWindow
 
-@Gtk.Template(resource_path='/com/github/elahpeca/Eigen/gtk/window.ui')
+@Gtk.Template(resource_path='/io/github/elahpeca/Eigen/gtk/window.ui')
 class EigenWindow(Adw.ApplicationWindow):
     """
     Main application window for Eigen.

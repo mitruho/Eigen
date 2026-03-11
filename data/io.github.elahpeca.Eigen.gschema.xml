@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="eigen">
-	<schema id="io.github.elahpeca.Eigen" path="/com/github/elahpeca/Eigen/">
+	<schema id="io.github.elahpeca.Eigen" path="/io/github/elahpeca/Eigen/">
 		<key name="window-width" type="i">
 			<default>480</default>
 		</key>
