@@ -4,18 +4,18 @@
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>GPL-3.0-or-later</project_license>
 	<name>Eigen</name>
-	<summary> Nice and simple matrix calculator </summary>
+	<summary>Nice and simple matrix calculator </summary>
 	<description>
 		<p>Eigen is a GTK4 matrix calculator, designed with ease of use and elegance in mind.</p>
 		<p>It supports:</p>
 		<ul>
-			<li>✅Main matrix-matrix and matrix-scalar operations</li>
-			<li>✅Transposition and matrix inversion</li>
-			<li>✅Eigendecomposition, as well as other decompositions, such as QR, LU</li>
+			<li>Main matrix-matrix and matrix-scalar operations</li>
+			<li>Transposition and matrix inversion</li>
+			<li>Eigendecomposition, as well as other decompositions, such as QR, LU</li>
 		</ul>
 	</description>
 	<screenshots>
-		<screenshot>
+		<screenshot type="default">
 			<image>https://raw.githubusercontent.com/elahpeca/Eigen/refs/heads/master/data/screenshots/screenshot1.png</image>
       		<caption>Eigen in eigendecomposition mode</caption>
 		</screenshot>
@@ -26,4 +26,18 @@
 	</screenshots>
 	<url type="homepage">https://github.com/elahpeca/Eigen</url>
 	<url type="bugtracker">https://github.com/elahpeca/Eigen/issues</url>
+	<content_rating type="oars-1.1"/>
+	<releases>
+		<release version="1.0.0" date="2026-03-11"/>
+		<p>This is the 1.0 release of Eigen. The features of this release include the following:</p>
+        <ul>
+			<li>Perform simple calculations between matrices, vectors and scalars</li>
+			<li>Perform 3 types of decomposition: Eigendecomposition, LU, QR</li>
+			<li>Transpose and inverse the matrices</li>
+			<li>Do all these actions in a convenient environment, that allows you to reuse your results for other calculations!</li>
+        </ul>
+	</releases>
+	<developer id="com.github.elahpeca">
+		<name>elahpeca</name>
+	</developer>
 </component>

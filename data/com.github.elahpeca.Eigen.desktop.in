@@ -7,3 +7,4 @@ Icon=com.github.elahpeca.Eigen
 Terminal=false
 Categories=Utility;
 StartupNotify=true
+Keywords=matrix;calculator;linear algebra;
