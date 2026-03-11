@@ -1,6 +1,6 @@
-data/com.github.elahpeca.Eigen.desktop.in
-data/com.github.elahpeca.Eigen.metainfo.xml.in
-data/com.github.elahpeca.Eigen.gschema.xml
+data/io.github.elahpeca.Eigen.desktop.in
+data/io.github.elahpeca.Eigen.metainfo.xml.in
+data/io.github.elahpeca.Eigen.gschema.xml
 eigen/main.py
 eigen/window.py
 eigen/window.ui

@@ -1,4 +1,4 @@
-application_id = 'com.github.elahpeca.Eigen'
+application_id = 'io.github.elahpeca.Eigen'
 
 scalable_dir = 'hicolor' / 'scalable' / 'apps'
 install_data(

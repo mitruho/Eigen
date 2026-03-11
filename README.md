@@ -1,6 +1,6 @@
 <div align="center">
   
-  ![logo](./data/icons/hicolor/scalable/apps/com.github.elahpeca.Eigen.svg)
+  ![logo](./data/icons/hicolor/scalable/apps/io.github.elahpeca.Eigen.svg)
 
 
   <h1>Eigen</h1>
@@ -44,9 +44,9 @@ It supports:
 Use Gnome Builder or run these commands in your terminal app to install flatpak.
 
 ```
-flatpak-builder --force-clean --user --install .flatpak/repo com.github.elahpeca.Eigen.json
+flatpak-builder --force-clean --user --install .flatpak/repo io.github.elahpeca.Eigen.json
 ```
 
 ```
-flatpak run com.github.elahpeca.Eigen
+flatpak run io.github.elahpeca.Eigen
 ```

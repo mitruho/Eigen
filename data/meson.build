@@ -1,8 +1,8 @@
 gnome = import('gnome')
 
 desktop_file = i18n.merge_file(
-        input: 'com.github.elahpeca.Eigen.desktop.in',
-       output: 'com.github.elahpeca.Eigen.desktop',
+        input: 'io.github.elahpeca.Eigen.desktop.in',
+       output: 'io.github.elahpeca.Eigen.desktop',
          type: 'desktop',
        po_dir: '../po',
       install: true,
@@ -15,8 +15,8 @@ if desktop_utils.found()
 endif
 
 appstream_file = i18n.merge_file(
-        input: 'com.github.elahpeca.Eigen.metainfo.xml.in',
-       output: 'com.github.elahpeca.Eigen.metainfo.xml',
+        input: 'io.github.elahpeca.Eigen.metainfo.xml.in',
+       output: 'io.github.elahpeca.Eigen.metainfo.xml',
        po_dir: '../po',
       install: true,
   install_dir: get_option('datadir') / 'metainfo'
@@ -26,7 +26,7 @@ appstreamcli = find_program('appstreamcli', required: false, disabler: true)
 test('Validate appstream file', appstreamcli,
      args: ['validate', '--no-net', '--explain', appstream_file])
 
-install_data('com.github.elahpeca.Eigen.gschema.xml',
+install_data('io.github.elahpeca.Eigen.gschema.xml',
   install_dir: get_option('datadir') / 'glib-2.0' / 'schemas'
 )
 

@@ -9,13 +9,13 @@ class EigenApplication(Adw.Application):
         Initializes the EigenApplication instance.
         """
         super().__init__(
-            application_id='com.github.elahpeca.Eigen',
+            application_id='io.github.elahpeca.Eigen',
             flags=Gio.ApplicationFlags.DEFAULT_FLAGS
         )
 
         self.set_resource_base_path('/com/github/elahpeca/Eigen')
         self.style_manager = Adw.StyleManager.get_default()
-        self.settings = Gio.Settings.new('com.github.elahpeca.Eigen')
+        self.settings = Gio.Settings.new('io.github.elahpeca.Eigen')
 
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
@@ -46,7 +46,7 @@ class EigenApplication(Adw.Application):
         """
         about_dialog = Adw.AboutDialog(
             application_name='Eigen',
-            application_icon='com.github.elahpeca.Eigen',
+            application_icon='io.github.elahpeca.Eigen',
             developer_name='elahpeca',
             version='1.0.0',
             comments=_(

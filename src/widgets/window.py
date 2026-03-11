@@ -51,7 +51,7 @@ class EigenWindow(Adw.ApplicationWindow):
             **kwargs: Additional keyword arguments passed to the parent class.
         """
         super().__init__(**kwargs)
-        self.settings = Gio.Settings.new('com.github.elahpeca.Eigen')
+        self.settings = Gio.Settings.new('io.github.elahpeca.Eigen')
         self.connect('unrealize', self.save_window_properties)
 
         self.mode_handler = ModeHandler(self.mode_dropdown)
