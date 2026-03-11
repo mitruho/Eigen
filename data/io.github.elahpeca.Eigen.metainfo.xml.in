@@ -24,6 +24,7 @@
       		<caption>Eigen in matrix calculator mode</caption>
 		</screenshot>
 	</screenshots>
+	<launchable type="desktop-id">io.github.elahpeca.Eigen.desktop</launchable>
 	<url type="homepage">https://github.com/elahpeca/Eigen</url>
 	<url type="bugtracker">https://github.com/elahpeca/Eigen/issues</url>
 	<content_rating type="oars-1.1"/>
