@@ -32,7 +32,7 @@
                         "type" : "git",
                         "url" : "https://github.com/elahpeca/Eigen.git",
                         "tag" : "v1.0.0",
-                        "commit" : "6bcff7cc618100ad28292eaed356086f704ccc0a"
+                        "commit" : "d4d153a76e92847741dec7ba4d3b6da693ae8eca"
                     }
             ]
         }
