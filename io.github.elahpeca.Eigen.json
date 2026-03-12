@@ -20,8 +20,8 @@
                     {
                         "type" : "git",
                         "url" : "https://github.com/elahpeca/Eigen.git",
-                        "tag" : "v1.0.1",
-                        "commit" : "c8fdb8b7bb1f873aaabc8609a4d69487b1b2676b"
+                        "tag" : "v1.0.2",
+                        "commit" : "5168a930774b3c4379c19cc8477b9a2119543c3f"
                     }
             ]
         }
