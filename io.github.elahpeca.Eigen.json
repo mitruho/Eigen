@@ -18,8 +18,10 @@
             "buildsystem" : "meson",
             "sources" : [
                     {
-                        "type":"dir",
-                        "path":"."
+                        "type" : "git",
+                        "url" : "https://github.com/elahpeca/Eigen.git",
+                        "tag" : "v1.0.1",
+                        "commit" : "c8fdb8b7bb1f873aaabc8609a4d69487b1b2676b"
                     }
             ]
         }
