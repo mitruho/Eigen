@@ -29,24 +29,15 @@ It supports:
 ⚙️ Eigen uses NumPy matrix format, and makes working with them quite easy!
 
 ⚠️ Eigen is a very young app, so you're welcome to report the issues!
+
+## Installation
+
+<a href="https://flathub.org/apps/details/io.github.elahpeca.Eigen" align="center">
+    <img alt="Download on Flathub" src="https://flathub.org/api/badge?svg&locale=en&light" width="200" align="center"/>
+  </a>
+
 ## Dependencies
 
 - gtk4
 - libadwaita1
 
-## Building and running
-#### Building requirements
-- meson
-- flatpak-builder
-
-### Flatpak
-
-Use Gnome Builder or run these commands in your terminal app to install flatpak.
-
-```
-flatpak-builder --force-clean --user --install .flatpak/repo io.github.elahpeca.Eigen.json
-```
-
-```
-flatpak run io.github.elahpeca.Eigen
-```
