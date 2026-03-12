@@ -48,7 +48,7 @@ class EigenApplication(Adw.Application):
             application_name='Eigen',
             application_icon='io.github.elahpeca.Eigen',
             developer_name='elahpeca',
-            version='1.0.1',
+            version='1.0.2',
             comments=_(
                 'Eigen is a nice and simple app for matrix decomposition.',
             ),

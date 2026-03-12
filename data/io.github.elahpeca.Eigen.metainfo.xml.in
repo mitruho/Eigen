@@ -29,7 +29,16 @@
 	<url type="bugtracker">https://github.com/elahpeca/Eigen/issues</url>
 	<url type="vcs-browser">https://github.com/elahpeca/Eigen</url>
 	<content_rating type="oars-1.1"/>
+	<branding>
+		<color type="primary" scheme_preference="light">#813d9c</color>
+		<color type="primary" scheme_preference="dark">#dc8add</color>
+	</branding>
 	<releases>
+		<release version="1.0.2" date="2026-03-12">
+			<description>
+				<p>Added branding color for Flathub</p>
+			</description>
+		</release>
 		<release version="1.0.1" date="2026-03-12">
 			<description>
 				<p>Small fix; added vcs-browser to metainfo file</p>
