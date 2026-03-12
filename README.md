@@ -32,8 +32,8 @@ It supports:
 
 ## Installation
 
-<a href="https://flathub.org/apps/details/io.github.elahpeca.Eigen" align="center">
-    <img alt="Download on Flathub" src="https://flathub.org/api/badge?svg&locale=en&light" width="200" align="center"/>
+<a href="https://flathub.org/apps/details/io.github.elahpeca.Eigen">
+    <img alt="Download on Flathub" src="https://flathub.org/api/badge?svg&locale=en&light" width="200"/>
   </a>
 
 ## Dependencies
