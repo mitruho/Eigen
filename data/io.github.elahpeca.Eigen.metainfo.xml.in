@@ -27,8 +27,14 @@
 	<launchable type="desktop-id">io.github.elahpeca.Eigen.desktop</launchable>
 	<url type="homepage">https://github.com/elahpeca/Eigen</url>
 	<url type="bugtracker">https://github.com/elahpeca/Eigen/issues</url>
+	<url type="vcs-browser">https://github.com/elahpeca/Eigen</url>
 	<content_rating type="oars-1.1"/>
 	<releases>
+		<release version="1.0.1" date="2026-03-12">
+			<description>
+				<p>Small fix; added vcs-browser to metainfo file</p>
+			</description>
+		</release>
 		<release version="1.0.0" date="2026-03-11">
 			<description>
 				<p>This is the 1.0 release of Eigen. The features of this release include the following:</p>
